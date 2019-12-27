@@ -1,0 +1,111 @@
+{% extends 'base_client.html.twig' %}
+
+{% block title %}Period detail{% endblock %}
+
+{% block body %}
+    <div class="row pB-100">
+        <div class="col-md-12">
+            <div class="bgc-white bd bdrs-3 p-20">
+                <h4 class="c-grey-900 mB-20">Period #{{ period.id }} Informatie van [12/12/2019 - 30/12/2019]
+
+                    {% if period.isConfirm %}
+                        <span class="icon-holder c-green-600">
+                        <i class="c-green-600 ti-check"></i> Bevestigd </span>
+                    {% else %}
+                        <span class="icon-holder c-red-400">
+                        <i class="c-red-400 ti-info-alt"></i> Nog te bevestigen </span>
+                    {% endif %}
+                </h4>
+                Aan: {{ period.client.companyName }}
+                {% for task in tasksOfPeriod %}
+                    <div class="bdT pX-40 pY-30">
+                        <h3>Prestatie #{{ task.id }}</h3>
+                        <h4>{{ task.user.nickname }}</h4>
+
+                        <h5>Op {{ task.date|date('d-m-y') }} : {{ task.startTime|date('H:i:s') }}
+                            -> {{ task.endTime|date('H:i:s') }} = {{ task.totalHours }} uren gewerkt</h5>
+                        <div class="fw-600 c-grey">
+                            Beschrijving
+                        </div>
+                        <p>{{ task.description }}</p>
+                        <div class="fw-600 c-grey">
+                            Gebruikte material
+                        </div>
+                        <p>{{ task.used }}</p>
+
+                        <div class="peer">
+                            <div class=" fw-600 title">
+                                Uur tarief
+                            </div>
+                            <div class="value">
+                                {{ task.client.hourlyRate }} EUR
+                            </div>
+                        </div>
+                        <div class="peer">
+                            <div class=" fw-600 title">
+                                Transport Kost
+                            </div>
+                            <div class="value">
+                                {{ task.client.transportCost }} EUR x {{ task.transportKM }}km
+                                = {{ task.startTime|date('H') }} EUR
+                            </div>
+                        </div>
+                        <hr>
+                        <div class=" peer">
+                            <div class=" fw-600 c-teal-300">
+                                Totaal kost van dit prestatie
+                            </div>
+                            <div class="value c-teal-200">
+                                {{ task.totalCost|number_format(2, ',', ' ') }} EUR
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+
+
+            </div>
+        </div>
+    </div>
+
+    <div class="total__cost_period bdT pX-40 pY-10">
+
+        <div class="col-md-4 col-l-4">
+            <h2 class="fw-600 c-teal-800">
+                Totaal kost van dit period
+            </h2>
+            <h3 class="value c-teal-800">
+                {{ totalCostOfPeriod|number_format(2, ',', ' ') }} EUR
+            </h3>
+        </div>
+        {% if period.isConfirm == false %}
+            <div class="col-md-4 col-l-4">
+                {{ form_start(form) }}
+                <div class="form-row">
+                    {% if form.periodId is defined %}
+                        {{ form_row(form.periodId) }}
+                    {% endif %}
+                    <div class="form-group col-md-8">
+                        {{ form_label(form.toConfirm, 'Typ BEVESTIG om te bevestigen ') }}
+
+                        {{ form_widget(form.toConfirm, {'attr': {'class': 'form-control','id':'inputIsConfirm1'}}) }}
+                        {% if error is defined and error is not null %}
+                            <small class="fw-600 c-red-700">{{ error }}</small>
+                        {% endif %}
+                    </div>
+
+                    <div class="alert alert-danger remove" id="error_message" role="alert">Fout opgestreden: typ
+                        opnieuw
+                    </div>
+                </div>
+                {{ form_widget(form.save, {'attr':{"class":"btn btn-primary"},'label': 'Bevestig'}) }}
+
+                {{ form_end(form) }}
+            </div>
+        {% else %}
+            <h3>
+        <span class="icon-holder c-teal-800">
+                        <i class="c-teal-800 ti-check"></i> Bevestigd </span>
+            </h3>
+        {% endif %}
+    </div>
+{% endblock %}

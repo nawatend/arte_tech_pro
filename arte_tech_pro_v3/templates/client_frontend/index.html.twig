@@ -1,0 +1,42 @@
+{% extends 'base_client.html.twig' %}
+
+{% block title %}Klant Period{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="bgc-white bd bdrs-3 p-20">
+                <h4 class="c-grey-900 mB-20">Period: <span class="icon-holder c-red-400">
+                        <i class="c-red-400 ti-info-alt"></i> Nog te bevestigen </span></h4>
+
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th scope="col">Period ID</th>
+                        <th scope="col">Client Naam</th>
+                        <th scope="col">Start Datum (d-m-Y)</th>
+                        <th scope="col">Eind Datum (d-m-Y)</th>
+                        <th scope="col">Prestatie IDs</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for period in periods %}
+                        <tr onclick="window.location.href='{{ path('clientDetailPeriod', {periodId: period.id}) }}'"
+                            class="clickable">
+                            <th scope="row">{{ period.id }} </th>
+                            <td>{{ period.client.companyName }} </td>
+                            <td>{{ period.startDate|date('d-m-Y') }} </td>
+                            <td>{{ period.endDate|date('d-m-Y') }} </td>
+                            <td>
+                                {% for task in period.tasks %}
+                                    {{ task.id }},
+                                {% endfor %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

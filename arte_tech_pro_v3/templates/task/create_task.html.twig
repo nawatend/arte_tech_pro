@@ -1,0 +1,76 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nieuwe Prestatie{% endblock %}
+{% block body %}
+    <div class="bgc-white p-20 bd">
+        <h6 class="c-grey-900">Prestatie Gegevens</h6>
+        <div class="mT-30">
+            {{ form_start(form) }}
+            <div class="form-row col-md-8 ">
+
+                {% if form.taskId is defined %}
+                    {{ form_row(form.taskId) }}
+                {% endif %}
+                <div class="form-group col-md-5">
+                    {{ form_label(form.clients,'Klant') }}
+                    {{ form_widget(form.clients,{'attr':{'class': 'form-control','id':'inputClient'}}) }}
+                </div>
+                <div class="form-group col-md-5">
+                    {{ form_label(form.users,'Werknemers') }}
+                    {{ form_widget(form.users,{'attr':{'class': 'form-control','id':'inputEmployee'}}) }}
+                </div>
+
+                <div class="form-group col-md-10">
+                    {{ form_label(form.date,'Datum') }}
+                    <div class="timepicker-input input-icon form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon bgc-white bd bdwR-0"><i class="ti-calendar"></i></div>
+                            {#                        <input type="text" class="form-control bdc-grey-200 start-date" placeholder="Datepicker"#}
+                            {#                               data-provide="datepicker">#}
+                            {{ form_widget(form.date, {'attr':{'class': 'form-control bdc-grey-200 start-date'}}) }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group col-md-5">
+                    {{ form_label(form.startTime,'Start tijd (uur:min)') }}
+                    {{ form_widget(form.startTime,{'attr':{'class': 'form-control'}}) }}
+                </div>
+                <div class="form-group col-md-5">
+                    {{ form_label(form.endTime,'Einde tijd (uur:min)') }}
+                    {{ form_widget(form.endTime,{'attr':{'class': 'form-control'}}) }}
+                </div>
+                <div class="form-group col-md-10">
+                    {{ form_label(form.description,'Beschrijving') }}
+                    {{ form_widget(form.description,{'attr':{'class': 'form-control', 'rows': '6'}}) }}
+                </div>
+                <div class="form-group col-md-10">
+                    {{ form_label(form.used,'Gebruikte materailen') }}
+                    {{ form_widget(form.used,{'attr':{'class': 'form-control', 'rows': '4'}}) }}
+                </div>
+                <div class="form-group col-md-10">
+                    {{ form_label(form.km,"Aantal km's ") }}
+                    {{ form_widget(form.km,{'attr':{'class': 'form-control'}}) }}
+                </div>
+                <div class="form-group col-md-5">
+                    {{ form_widget(form.save, {'attr':{"class":"btn btn-primary"},'label': 'Opslaan'}) }}
+                </div>
+
+                {% if form.taskId is defined %}
+                    <div class="form-group col-md-5">
+                        <a class="btn btn-danger" href="{{ path('deleteTask',{task: task.id}) }}">Verwijder</a>
+                    </div>
+                {% endif %}
+
+                {{ form_end(form) }}
+
+                {% for error in errors %}
+                    <li>{{ error.message }}</li>
+                {% endfor %}
+                <div class="alert alert-danger remove" id="error_message" role="alert">Wachtwoorden moeten zelfde zijn!
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}

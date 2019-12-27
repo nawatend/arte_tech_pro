@@ -1,0 +1,64 @@
+.task
+    border-radius: $border-radius-small
+    height: 50px
+    width: 100%
+    background-color: $bg-light-color
+    display: flex
+    justify-content: space-evenly
+    align-items: center
+    color: black
+    margin-bottom: 4px
+    font-weight: $font-medium
+    font-size: 14px
+    .task__id
+        width: 20%
+        height: 50px
+        display: flex
+        align-items: center
+        justify-content: flex-end
+        padding-right: 6px
+    .task__company
+        height: 50px
+        width: 65%
+        display: flex
+        align-items: center
+        padding-left: 6px
+    .task__hours
+        height: 50px
+        width: 15%
+        display: flex
+        align-items: center
+        padding-left: 6px
+
+
+.titles
+    border-radius: $border-radius-small
+    height: 50px
+    width: 100%
+    display: flex
+    justify-content: space-evenly
+    align-items: center
+    margin-bottom: 4px
+    @include secondTitle
+
+    .titles__id
+        font-size: 16px
+        width: 20%
+        height: 50px
+        display: flex
+        align-items: center
+        justify-content: flex-end
+        padding-right: 6px 
+    .titles__company
+        height: 50px
+        width: 65%
+        display: flex
+        align-items: center
+        padding-left: 6px
+    .titles__hours
+        height: 50px
+        width: 15%
+        display: flex
+        align-items: center
+        padding-left: 6px
+

@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Personelen{% endblock %}
+
+{% block body %}
+    <div class="btn__new--right--bottom">
+        <a href="{{path('createEmployee')}}" class="btn btn-primary btn-block">+ Nieuw</a></div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="bgc-white bd bdrs-3 p-20">
+                <h4 class="c-grey-900 mB-20">Eigen Personeel</h4>
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th scope="col">Gebruikers ID</th>
+                        <th scope="col">E-mail</th>
+                        <th scope="col">Telefoon</th>
+                        <th scope="col">Uurtarief</th>
+                        <th scope="col">Transportkost</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for employee in employees %}
+                        <tr onclick="window.location.href='{{ path('editEmployee', {employeeId: employee.id}) }}'" class="clickable">
+                            <th scope="row">{{ employee.id }} </th>
+                            <td>{{ employee.email }}  </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

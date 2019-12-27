@@ -1,0 +1,41 @@
+.nav
+    display: flex
+    align-items: center
+    justify-content: space-around
+    position: fixed
+    background: white
+    height: 60px
+    width: 100%
+    bottom: 0
+    z-index: 9999
+    box-shadow: 0 14px 28px rgba(0,0,0,0.55), 0 10px 10px rgba(0,0,0,0.22)
+    a
+        text-decoration: none
+        color: $main-color
+    a:active
+        color: $second-color
+    li
+        font-size: 16px
+        list-style-type: none
+        display: flex
+        justify-content: center
+        flex-wrap: wrap
+        align-items: center
+        flex-direction: column
+
+        .nav_item--label
+            font-size: 12px
+            
+    .add__task
+        position: absolute
+        top: -30px
+        width: 60px
+        height: 60px
+        background-color: $main-color
+        color: $white-color
+        display: flex
+        justify-content: center
+        align-items: center
+        border-radius: 50%
+        cursor: pointer
+    

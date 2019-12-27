@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello PageController!{% endblock %}
+
+{% block body %}
+    <div class="bgc-white p-20 bd">
+        <h6 class="c-grey-900">Sign Up user</h6>
+        <div class="mT-30">
+            {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    {{ form_label(form.email) }} {{ form_widget(form.email, {'attr': {'class': 'form-control','id':'inputEmail4'}}) }}
+                </div>
+                <div class="form-group col-md-6">
+
+                    {{ form_label(form.password) }} {{ form_widget(form.password, {'attr': {'class': 'form-control','id':'inputPassword4'}}) }}
+                    <div class="form-check"><label class="form-check-label"><input class="form-check-input" id="show_password" type="checkbox"> Toon wachtwoord</label></div>
+                </div>
+                <div class="alert alert-danger remove" id="error_password" role="alert">Wachtwoorden moeten zelfde zijn!</div>
+            </div>
+            {{ form_widget(form.save, {'attr':{"class":"btn btn-primary"}}) }}
+            {{ form_end(form) }}
+        </div>
+    </div>
+
+{% endblock %}

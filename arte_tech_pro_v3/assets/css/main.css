@@ -1,0 +1,27 @@
+.remove {
+  display: none !important;
+}
+
+.btn__new--right--bottom {
+  z-index: 999 !important;
+  position: fixed !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  padding: 20px !important;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.total__cost_period {
+  position: fixed;
+  bottom: 0;
+  background-color: #fff;
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+/*# sourceMappingURL=main.css.map */

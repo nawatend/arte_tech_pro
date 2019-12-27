@@ -1,0 +1,77 @@
+security:
+    #access_denied_url: /login
+    encoders:
+        App\Entity\User:
+            algorithm: auto
+
+    # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+    providers:
+        # used to reload user from session & other features (e.g. switch_user)
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: email
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        login:
+            pattern: ^/api/login
+            stateless: true
+            anonymous: true
+            json_login:
+                check_path: /api/login_check
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+
+        api:
+            pattern:  ^/api
+            stateless: true
+            anonymous: false
+            guard:
+                authenticators:
+                    - lexik_jwt_authentication.jwt_token_authenticator
+        main:
+            anonymous: ~
+            guard:
+                authenticators:
+                    - App\Security\LoginFormAuthenticator
+            logout:
+                path: app_logout
+                # where to redirect after logout
+                # target: app_any_route
+
+            access_denied_handler: App\Security\AccessDeniedHandler
+            # activate different ways to authenticate
+            # https://symfony.com/doc/current/security.html#firewalls-authentication
+
+            # https://symfony.com/doc/current/security/impersonating_user.html
+            # switch_user: true
+
+    # Easy way to control access for large sections of your site
+    # Note: Only the *first* access control that matches will be used
+    access_control:
+        - { path: ^/login$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY  }
+        - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/clients, roles: ROLE_ADMIN }
+        - { path: ^/tasks, roles: ROLE_ADMIN }
+        - { path: ^/freelancers, roles: ROLE_ADMIN }
+        - { path: ^/employees, roles: ROLE_ADMIN }
+        - { path: ^/periods, roles: ROLE_ADMIN }
+        - { path: ^/edit_period[0-9]+, roles: ROLE_ADMIN}
+        - { path: ^/edit_client[0-9]+, roles: ROLE_ADMIN}
+        - { path: ^/edit_employee[0-9]+, roles: ROLE_ADMIN}
+        - { path: ^/edit_task[0-9]+, roles: ROLE_ADMIN}
+        - { path: ^/create_client, roles: ROLE_ADMIN}
+        - { path: ^/create_employee, roles: ROLE_ADMIN}
+        - { path: ^/create_freelancer, roles: ROLE_ADMIN}
+        - { path: ^/create_period, roles: ROLE_ADMIN}
+        - { path: ^/create_task, roles: ROLE_ADMIN}
+        - { path: ^/client_home, roles: ROLE_CLIENT}
+        - { path: ^/client_confirmed_periods, roles: ROLE_CLIENT}
+        - { path: ^/client_confirmed_periods, roles: ROLE_CLIENT}
+        - { path: ^/client_detail_period_[0-9]+, roles: ROLE_CLIENT}
+        # - { path: ^/admin, roles: ROLE_ADMIN }
+        # - { path: ^/profile, roles: ROLE_USER }
+

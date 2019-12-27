@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Klanten{% endblock %}
+
+{% block body %}
+    <div class="btn__new--right--bottom">
+        <a href="{{path('createClient')}}" class="btn btn-primary btn-block">+ Nieuw</a></div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="bgc-white bd bdrs-3 p-20">
+                <h4 class="c-grey-900 mB-20">Klanten </h4>
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th scope="col">Klant Id</th>
+                        <th scope="col">Bedrijfsnaam</th>
+                        <th scope="col">Telefoon</th>
+                        <th scope="col">Uurtarief</th>
+                        <th scope="col">Transportkost</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for client in clients %}
+                        <tr onclick="window.location.href='{{ path('editClient', {clientId: client.id}) }}'" class="clickable">
+                            <th scope="row">{{ client.id }} </th>
+                            <td>{{ client.companyName }}  </td>
+                            <td> {{ client.telephone }}  </td>
+                            <td> {{ client.hourlyRate }}  </td>
+                            <td> {{ client.transportCost }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
