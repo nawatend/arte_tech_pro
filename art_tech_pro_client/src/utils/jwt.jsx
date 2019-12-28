@@ -5,7 +5,7 @@ let checkJWTValid = () => {
 
     let isJWTValid = false
 
-    const token = localStorage.getItem('wu_token')
+    const token = localStorage.getItem('ATP_token')
 
     if (token !== 'undefined' && token !== null) {
         let decodedToken = jwt(token, { complete: true })

@@ -1,4 +1,3 @@
-
 import axios from 'axios'
 
 
@@ -38,7 +37,7 @@ let getTasksByUser = async () => {
 let logout = () => {
 
     localStorage.removeItem("ATP_token")
-
+    localStorage.removeItem("ATP_userId")
 }
 
 export {

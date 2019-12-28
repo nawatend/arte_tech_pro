@@ -14,7 +14,8 @@ let TasksPage = () => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     let getTasks = async () => {
-        await axios.post(process.env.REACT_APP_API_URL + "/api/tasksbyuser", { 'email': email }, { headers: { "Authorization": `Bearer ${token}` } })
+        await axios.post(process.env.REACT_APP_API_URL + "/api/tasksbyuser", { 'email': email }
+            , { headers: { "Authorization": `Bearer ${token}` } })
             .then(response => {
                 if (response.status === 200) {
                     setTasks(response.data)

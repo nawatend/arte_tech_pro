@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Task from './Task'
 import ScrollReveal from 'scrollreveal'
 let TaskList = ({ tasks }) => {
 
 
+    const [totalTasks] = useState(tasks.length)
     useEffect(() => {
         const container = document.querySelector('.tasks');
         const sr = ScrollReveal({ container: container });
@@ -25,14 +26,15 @@ let TaskList = ({ tasks }) => {
                 <div className="titles__hours">Uren</div>
             </div>
 
+            {totalTasks <= 0 &&
+                <p>Geen Prestatie</p>
+            }
+
+
             {tasks.map(task => {
                 return (<Task key={task.id} task={task} />)
             })
             }
-
-
-
-
         </div>
     )
 }

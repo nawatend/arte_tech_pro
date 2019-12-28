@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use DateTime;
 use App\Entity\Client;
+use App\Entity\Helper;
 use App\Entity\Task;
 use Doctrine\Common\Annotations\AnnotationException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -46,20 +48,19 @@ class APIController extends AbstractController
         $userManager = $this->getDoctrine()->getRepository(User::class);
         $taskManager = $this->getDoctrine()->getRepository(Task::class);
         $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
-        $norm = [ new DateTimeNormalizer(), new ObjectNormalizer($classMetadataFactory), ];
+        $norm = [new DateTimeNormalizer(), new ObjectNormalizer($classMetadataFactory),];
         $encoders = [new JsonEncoder()];
-        $serializer = new Serializer($norm,$encoders);
-
+        $serializer = new Serializer($norm, $encoders);
 
 
         if ($request->isMethod('POST')) {
             $postData = json_decode($request->getContent());
-            $user = $userManager->findOneBy(['email'=>$postData->email]);
+            $user = $userManager->findOneBy(['email' => $postData->email]);
 
 
-            $tasks = $taskManager->findBy(['user'=>$user->getId()]);
+            $tasks = $taskManager->findBy(['user' => $user->getId()]);
 
-            $tasks = $serializer->normalize($tasks,'json',['groups'=>'taskInfo']);
+            $tasks = $serializer->normalize($tasks, 'json', ['groups' => 'taskInfo']);
             return $this->json($tasks);
         }
     }
@@ -69,7 +70,7 @@ class APIController extends AbstractController
      */
     public function getClients()
     {
-        return $this->json(["client"=>"nawnag"]);
+        return $this->json(["client" => "nawnag"]);
     }
 
     /**
@@ -79,19 +80,9 @@ class APIController extends AbstractController
      */
     public function getClientsByUser(Request $request)
     {
-        return $this->json(["client_byUser"=>"nawnasssg"]);
+        return $this->json(["client_byUser" => "nawnasssg"]);
     }
 
-
-    /**
-     * @Route("/api/savetask", name="api_saveNewTask", methods={"POST"})
-     * @param Request $request
-     * @return JsonResponse
-     */
-    public function saveNewTask(Request $request)
-    {
-        return $this->json(["client_byUser"=>"nawnasssg"]);
-    }
 
     /**
      * @Route("/api/saverate", name="api_updateRate", methods={"POST"})
@@ -100,8 +91,92 @@ class APIController extends AbstractController
      */
     public function updateRate(Request $request)
     {
-        return $this->json(["client_byUser"=>"nawnassg"]);
+        return $this->json(["client_byUser" => "nawnassg"]);
     }
 
+    /**
+     * @Route("/api/getuserinfo", name="api_getUserInfo", methods={"POST"})
+     * @param Request $request
+     * @return JsonResponse
+     * @throws AnnotationException
+     * @throws ExceptionInterface
+     */
+    public function getUserInfo(Request $request)
+    {
 
+        $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
+        $norm = [new DateTimeNormalizer(), new ObjectNormalizer($classMetadataFactory),];
+        $encoders = [new JsonEncoder()];
+        $ser = new Serializer($norm, $encoders);
+
+        $userManager = $this->getDoctrine()->getRepository(User::class);
+
+        if ($request->isMethod('POST')) {
+            $postData = json_decode($request->getContent());
+            $user = $userManager->findOneBy(['email' => $postData->email]);
+
+            $userObj = $ser->normalize($user, 'json', ['groups' => 'userInfo', ObjectNormalizer::ENABLE_MAX_DEPTH => true]);
+
+            return $this->json($userObj);
+        }
+
+    }
+
+    /**
+     * @Route("/api/savetask", name="api_saveTask", methods={"POST"})
+     * @param Request $request
+     * @return JsonResponse
+     * @throws \Exception
+     */
+    public function saveTask(Request $request)
+    {
+
+        $em = $this->getDoctrine()->getManager();
+        $clientRepo = $this->getDoctrine()->getRepository(Client::class);
+        $userRepo = $this->getDoctrine()->getRepository(User::class);
+        $newTask = new Task();
+        $helper = new Helper();
+
+        if ($request->isMethod("POST")){
+
+            $postData = json_decode($request->getContent());
+
+
+
+            //client id
+            //user id
+            //date
+            //start time - timestamp
+            //end time - timestamp
+            //description
+            //Used
+            //km
+
+            $client = $clientRepo->find($postData->clientId);
+            $employeeUser = $userRepo->find($postData->workerId);
+            $dateFormatted = $helper->convertToGoodDateForDB($postData->date);
+           // dd($helper->getTimeFromTimestamp($postData->startTime));
+
+            $startTime = $helper->getTimeFromTimestamp($postData->startTime);
+            $endTime = $helper->getTimeFromTimestamp($postData->endTime);
+            $newTask->setClient($client);
+            $newTask->setUser($employeeUser);
+            $newTask->setDate(new DateTime($helper->getDateFromTimestamp($postData->date)));
+
+            $newTask->setStartTime($startTime);
+            $newTask->setEndTime($endTime);
+            $newTask->setTotalHours($helper->getHoursDifference($startTime,$endTime));
+
+            $newTask->setTotalCost($helper->calculateTaskTotalCost($client->getHourlyRate(),$helper->getHoursDifference($startTime,$endTime),$client->getTransportCost(),$postData->km));
+            $newTask->setDescription($postData->description);
+            $newTask->setUsed($postData->used);
+            $newTask->setTransportKM($postData->km);
+
+
+            $em->persist($newTask);
+            $em->flush();
+
+        }
+        return $this->json("Saved");
+    }
 }

@@ -18,20 +18,20 @@ class User implements UserInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups("worker")
+     * @Groups({"worker","userInfo"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      * @Assert\NotBlank
-     * @Groups("worker")
+     * @Groups({"worker","userInfo"})
      */
     private $email;
 
     /**
      * @ORM\Column(type="json")
-     * @Groups("worker")
+     * @Groups({"worker","userInfo"})
      */
     private $roles = [];
 
@@ -62,7 +62,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups("worker")
+     * @Groups({"worker","userInfo"})
      */
     private $nickname;
 

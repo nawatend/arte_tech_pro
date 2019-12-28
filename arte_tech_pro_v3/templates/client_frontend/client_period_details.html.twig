@@ -3,7 +3,7 @@
 {% block title %}Period detail{% endblock %}
 
 {% block body %}
-    <div class="row pB-100">
+    <div class="row pB-140">
         <div class="col-md-12">
             <div class="bgc-white bd bdrs-3 p-20">
                 <h4 class="c-grey-900 mB-20">Period #{{ period.id }} Informatie van [12/12/2019 - 30/12/2019]
@@ -20,10 +20,10 @@
                 {% for task in tasksOfPeriod %}
                     <div class="bdT pX-40 pY-30">
                         <h3>Prestatie #{{ task.id }}</h3>
-                        <h4>{{ task.user.nickname }}</h4>
+                        <h4>Door: {{ task.user.nickname }}</h4>
 
-                        <h5>Op {{ task.date|date('d-m-y') }} : {{ task.startTime|date('H:i:s') }}
-                            -> {{ task.endTime|date('H:i:s') }} = {{ task.totalHours }} uren gewerkt</h5>
+                        <h5>Op {{ task.date|date('d-m-y') }} [{{ task.startTime|date('H:i:s') }}
+                            -> {{ task.endTime|date('H:i:s') }}] = {{ task.totalHours }} uren gewerkt</h5>
                         <div class="fw-600 c-grey">
                             Beschrijving
                         </div>
@@ -46,8 +46,8 @@
                                 Transport Kost
                             </div>
                             <div class="value">
-                                {{ task.client.transportCost }} EUR x {{ task.transportKM }}km
-                                = {{ task.startTime|date('H') }} EUR
+                                {{ task.client.transportCost }} EUR x {{ task.transportKM }} km
+                                = {{ task.client.transportCost * task.transportKM }} EUR
                             </div>
                         </div>
                         <hr>
@@ -91,21 +91,29 @@
                         {% if error is defined and error is not null %}
                             <small class="fw-600 c-red-700">{{ error }}</small>
                         {% endif %}
+                        {{ form_label(form.comment, 'Voer uw opmerking(optioneel)') }}
+                        {{ form_widget(form.comment, {'attr': {'class': 'form-control','id':'inputIsComment1'}}) }}
                     </div>
 
                     <div class="alert alert-danger remove" id="error_message" role="alert">Fout opgestreden: typ
                         opnieuw
                     </div>
+                    <div class="form-group col-md-3">
+                        <label for="form_btn_toConfirm" class="required">Zeker?</label>
+                        {{ form_widget(form.save, {'attr':{"class":"btn btn-primary"},'label': 'Bevestig'}) }}
+                    </div>
                 </div>
-                {{ form_widget(form.save, {'attr':{"class":"btn btn-primary"},'label': 'Bevestig'}) }}
 
                 {{ form_end(form) }}
             </div>
         {% else %}
-            <h3>
-        <span class="icon-holder c-teal-800">
-                        <i class="c-teal-800 ti-check"></i> Bevestigd </span>
-            </h3>
+            <div>
+
+                <h3><span class="icon-holder c-teal-800"><i class="c-teal-800 ti-check"></i> Bevestigd </span>
+                </h3>
+                <h6><span class=" c-teal-800"> Opmerking:</span> {{ period.complain.message }} </h6>
+            </div>
+
         {% endif %}
     </div>
 {% endblock %}

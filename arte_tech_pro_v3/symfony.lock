@@ -111,9 +111,6 @@
     "knplabs/doctrine-behaviors": {
         "version": "1.6.0"
     },
-    "knplabs/knp-snappy": {
-        "version": "v1.2.0"
-    },
     "lcobucci/jwt": {
         "version": "3.3.1"
     },
@@ -341,9 +338,6 @@
     },
     "symfony/polyfill-php73": {
         "version": "v1.13.1"
-    },
-    "symfony/process": {
-        "version": "v5.0.1"
     },
     "symfony/profiler-pack": {
         "version": "v1.0.4"

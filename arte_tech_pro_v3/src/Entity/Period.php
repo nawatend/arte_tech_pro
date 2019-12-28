@@ -46,6 +46,11 @@ class Period
      */
     private $tasks;
 
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\Complain", mappedBy="period", cascade={"persist", "remove"})
+     */
+    private $complain;
+
     public function __construct()
     {
 
@@ -136,6 +141,23 @@ class Period
             if ($task->getPeriod() === $this) {
                 $task->setPeriod(null);
             }
+        }
+
+        return $this;
+    }
+
+    public function getComplain(): ?Complain
+    {
+        return $this->complain;
+    }
+
+    public function setComplain(Complain $complain): self
+    {
+        $this->complain = $complain;
+
+        // set the owning side of the relation if necessary
+        if ($complain->getPeriod() !== $this) {
+            $complain->setPeriod($this);
         }
 
         return $this;

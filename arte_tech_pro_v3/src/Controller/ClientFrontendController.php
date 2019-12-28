@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Client;
+use App\Entity\Complain;
 use App\Entity\Period;
 use App\Entity\Task;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -30,7 +31,7 @@ class ClientFrontendController extends AbstractController
 
         $username = $this->getUser()->getNickname();
         return $this->render('client_frontend/index.html.twig', [
-            'username'=>$username, "periods" => $notConfirmedPeriods
+            'username' => $username, "periods" => $notConfirmedPeriods
         ]);
     }
 
@@ -50,7 +51,7 @@ class ClientFrontendController extends AbstractController
 
         $username = $this->getUser()->getNickname();
         return $this->render('client_frontend/confirmed_periods.html.twig', [
-            'username'=>$username, "periods" => $notConfirmedPeriods
+            'username' => $username, "periods" => $notConfirmedPeriods
         ]);
     }
 
@@ -74,13 +75,14 @@ class ClientFrontendController extends AbstractController
 
         $totalCost = 0;
 
-        foreach ($tasksOfPeriod as $task){
+        foreach ($tasksOfPeriod as $task) {
             $totalCost += $task->getTotalCost();
         }
 
-        $confirmForm =$this->createFormBuilder()
+        $confirmForm = $this->createFormBuilder()
             ->add("periodId", HiddenType::class, ['attr' => ["value" => $period->getId()]])
             ->add('toConfirm', TextType::class)
+            ->add('comment', TextType::class, ["required" => false])
             ->add('save', SubmitType::class)
             ->setAction($this->generateUrl('confirmPeriod'))
             ->setMethod('POST')
@@ -90,7 +92,7 @@ class ClientFrontendController extends AbstractController
         //dd($tasksOfPeriod);
         $username = $this->getUser()->getNickname();
         return $this->render('client_frontend/client_period_details.html.twig', [
-            'error'=>$error,'form' => $confirmForm->createView(),"tasksOfPeriod" =>$tasksOfPeriod, "period"=>$period,'username'=>$username,'totalCostOfPeriod' =>$totalCost
+            'error' => $error, 'form' => $confirmForm->createView(), "tasksOfPeriod" => $tasksOfPeriod, "period" => $period, 'username' => $username, 'totalCostOfPeriod' => $totalCost
         ]);
     }
 
@@ -104,22 +106,33 @@ class ClientFrontendController extends AbstractController
     {
 
         $periodRepo = $this->getDoctrine()->getRepository(Period::class);
+        $complainRepo = $this->getDoctrine()->getRepository(Complain::class);
         $em = $this->getDoctrine()->getManager();
 
         if ($request->isMethod("POST")) {
             $formData = $request->request->get('form');
 
             $currentPeriod = $periodRepo->find($formData["periodId"]);
-
             $currentPeriod->setIsConfirm(true);
-            //dd($currentPeriod);
 
-            if ($formData["toConfirm"] == "BEVESTIG"){
+            //throw error when spelling wrong
+            if ($formData["toConfirm"] == "BEVESTIG") {
                 $em->persist($currentPeriod);
                 $em->flush();
-            }else{
+
+                if (!empty($formData['comment'])) {
+                    //make new complain
+                    $newComplain = new Complain();
+                    $newComplain->setMessage($formData['comment']);
+                    $newComplain->setPeriod($currentPeriod);
+                    $em->persist($newComplain);
+                    $em->flush();
+                }
+
+
+            } else {
                 $error = "Typ BEVESTIG juist in!";
-                return $this->redirect($this->generateUrl('clientDetailPeriod',array( "periodId"=>$formData['periodId'],'error' => $error)), 301);
+                return $this->redirect($this->generateUrl('clientDetailPeriod', array("periodId" => $formData['periodId'], 'error' => $error)), 301);
             }
 
             return $this->redirectToRoute("clientConfirmedPeriods");
@@ -127,4 +140,56 @@ class ClientFrontendController extends AbstractController
     }
 
 
+    /**
+     * @Route("/export_pdf_period_{periodId}", name="exportPeriodPDF")
+     * @param $periodId
+     * @return Response
+     */
+    public function exportPeriodPDF($periodId)
+    {
+
+        $error = null;
+        if (isset($_GET['error'])) {
+            $error = $_GET['error'];
+        }
+
+        $periodRepo = $this->getDoctrine()->getRepository(Period::class);
+        $taskRepo = $this->getDoctrine()->getRepository(Task::class);
+        $period = $periodRepo->find($periodId);
+        $tasksOfPeriod = $taskRepo->findBy(['period' => $period], ['date' => 'ASC']);
+
+        $totalCost = 0;
+
+        foreach ($tasksOfPeriod as $task) {
+            $totalCost += $task->getTotalCost();
+        }
+
+        $confirmForm = $this->createFormBuilder()
+            ->add("periodId", HiddenType::class, ['attr' => ["value" => $period->getId()]])
+            ->add('toConfirm', TextType::class)
+            ->add('comment', TextType::class, ["required" => false])
+            ->add('save', SubmitType::class)
+            ->setAction($this->generateUrl('confirmPeriod'))
+            ->setMethod('POST')
+            ->getForm();
+
+
+        //dd($tasksOfPeriod);
+        $username = $this->getUser()->getNickname();
+//        return $this->render('client_frontend/client_period_details.html.twig', [
+//            'error' => $error, 'form' => $confirmForm->createView(), "tasksOfPeriod" => $tasksOfPeriod, "period" => $period, 'username' => $username, 'totalCostOfPeriod' => $totalCost
+//        ]);
+//    }
+
+//        return $this->$knpSnappy->generateFromHtml(
+//            $this->renderView(
+//                'client_frontend/client_period_details.html.twig',
+//                [
+//                    'error' => $error, 'form' => $confirmForm->createView(), "tasksOfPeriod" => $tasksOfPeriod, "period" => $period, 'username' => $username, 'totalCostOfPeriod' => $totalCost
+//                ]
+//            ),
+//            './file.pdf'
+//        );
+
+    }
 }

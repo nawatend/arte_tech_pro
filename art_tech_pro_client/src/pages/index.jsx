@@ -1,6 +1,9 @@
 import React from 'react';
 import BaseLayout from '../layouts/base';
 import Button from '../components/Button'
+
+
+
 let HomePage = () => {
 
     return (

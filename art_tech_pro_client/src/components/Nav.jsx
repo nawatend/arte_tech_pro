@@ -6,7 +6,7 @@ import { Redirect } from 'react-router-dom'
 let Nav = () => {
     return (
         <div className="nav">
-            <a href="/" className="add__task">
+            <a href="/task/new" className="add__task">
                 <FiPlus size="2em" />
             </a>
 

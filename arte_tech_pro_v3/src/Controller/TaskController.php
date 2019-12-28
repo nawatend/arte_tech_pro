@@ -129,7 +129,7 @@ class TaskController extends AbstractController
     public function save(Request $request)
     {
 
-        //TODO: save to DB
+
         $helper = new Helper();
         $clientRepo = $this->getDoctrine()->getRepository(Client::class);
         $userRepo = $this->getDoctrine()->getRepository(User::class);

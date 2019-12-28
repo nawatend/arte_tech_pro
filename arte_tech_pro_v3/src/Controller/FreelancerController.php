@@ -220,4 +220,8 @@ class FreelancerController extends AbstractController
         //dd($userObj);
         return $this->json($userObj);
     }
+
+
+
+
 }
