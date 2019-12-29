@@ -12,7 +12,6 @@ let TextField = ({ type, id, label, defaultValue, onChange, placeholder }) => {
                 type={type}
                 defaultValue={defaultValue}
                 placeholder={placeholder}
-
             />
         </div>
     )

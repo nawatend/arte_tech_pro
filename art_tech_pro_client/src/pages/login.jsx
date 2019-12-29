@@ -10,6 +10,8 @@ import { withRouter } from "react-router-dom";
 import { useDispatch } from 'react-redux'
 import allActions from '../store/actions'
 import { checkJWTValid } from '../utils/jwt'
+import { NotificationContainer, NotificationManager } from 'react-notifications'
+import 'react-notifications/lib/notifications.css'
 
 let LoginPage = () => {
 
@@ -63,7 +65,6 @@ let LoginPage = () => {
         setIsAuth(checkJWTValid())
     }, [])
 
-
     if (!isAuth) {
         console.log("jwt is :" + checkJWTValid())
         if (loading) {
@@ -77,6 +78,12 @@ let LoginPage = () => {
                 <TextField type="password" label="wachtwoord" onChange={(event) => { setPassword(event.target.value) }} />
                 <Button name="MELD AAN" type="main" action={() => handleAuth(email, password)} />
                 <p className="error">{error}</p>
+
+
+                <button className='btn btn-success'
+                    onClick={() => NotificationManager.success('Succes', 'Prestatie Toegevoegd', 2600)}> Noti Me
+                </button>
+                <NotificationContainer />
             </div>
         )
     }
