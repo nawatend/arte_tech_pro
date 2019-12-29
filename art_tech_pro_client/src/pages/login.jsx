@@ -7,8 +7,8 @@ import Button from '../components/Button'
 import axios from 'axios'
 import { Redirect } from 'react-router-dom'
 import { withRouter } from "react-router-dom";
-import { useDispatch } from 'react-redux'
-import allActions from '../store/actions'
+// import { useDispatch } from 'react-redux'
+// import allActions from '../store/actions'
 import { checkJWTValid } from '../utils/jwt'
 import { NotificationContainer, NotificationManager } from 'react-notifications'
 import 'react-notifications/lib/notifications.css'
@@ -81,13 +81,14 @@ let LoginPage = () => {
 
 
                 <button className='btn btn-success'
-                    onClick={() => NotificationManager.success('Succes', 'Prestatie Toegevoegd', 2600)}> Noti Me
+                    onClick={() => NotificationManager.success('Succes', 'Prestatie Toegevoegd', 2600, ()=>{})}> Noti Me
                 </button>
                 <NotificationContainer />
             </div>
         )
     }
     else {
+        console.log("jwt is :" + checkJWTValid())
         return (
             <Redirect to='/' />
         )

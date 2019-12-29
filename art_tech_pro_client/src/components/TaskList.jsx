@@ -5,6 +5,9 @@ let TaskList = ({ tasks }) => {
 
 
     const [totalTasks] = useState(tasks.length)
+    // const [newYear, setNewYear] = useState()
+
+    let newYear = null
     useEffect(() => {
         const container = document.querySelector('.tasks');
         const sr = ScrollReveal({ container: container });
@@ -31,8 +34,31 @@ let TaskList = ({ tasks }) => {
             }
 
 
-            {tasks.map(task => {
-                return (<Task key={task.id} task={task} />)
+            {tasks.map((task, i) => {
+
+                let date = new Date(task.date)
+                // let nextTaskDate = new Date(task[i + 1].date)
+                if (i === 0) {
+                    newYear = date.getFullYear()
+                    return (
+                        <div key={task.id} className="">
+                            <div className="titles__year">{date.getFullYear()}</div>
+                            <Task key={task.id} task={task} />
+                        </div>)
+                }
+                if (date.getFullYear() !== newYear) {
+                    newYear = date.getFullYear()
+                    return (
+                        <div key={task.id} className="">
+                            <div className="titles__year">{date.getFullYear()}</div>
+                            <Task key={task.id} task={task} />
+                        </div>
+                    )
+                } else {
+                    return (
+                        <Task key={task.id} task={task} />
+                    )
+                }
             })
             }
         </div>

@@ -158,7 +158,7 @@ class EmployeeController extends AbstractController
 
 
     /**
-     * @Route("/employee/{user}/delete", name="deleteEmployee", methods={"POST"})
+     * @Route("/employee/{user}/delete", name="deleteEmployee", methods={"GET"})
      * @param User $user
      * @return RedirectResponse
      */

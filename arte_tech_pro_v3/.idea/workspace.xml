@@ -2,13 +2,35 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3536085b-9b7e-4620-868a-e0a508ff002a" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../art_tech_pro_client/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../art_tech_pro_client/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../art_tech_pro_client/src/components/textFields/TextField.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../art_tech_pro_client/src/components/textFields/TextField.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../art_tech_pro_client/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../art_tech_pro_client/src/App.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../art_tech_pro_client/src/components/Header.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../art_tech_pro_client/src/components/Header.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../art_tech_pro_client/src/components/Nav.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../art_tech_pro_client/src/components/Nav.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../art_tech_pro_client/src/components/SelectOptions.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../art_tech_pro_client/src/components/SelectOptions.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../art_tech_pro_client/src/components/Task.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../art_tech_pro_client/src/components/Task.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../art_tech_pro_client/src/components/TaskList.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../art_tech_pro_client/src/components/TaskList.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../art_tech_pro_client/src/pages/addTask.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../art_tech_pro_client/src/pages/addTask.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../art_tech_pro_client/src/pages/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../art_tech_pro_client/src/pages/index.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../art_tech_pro_client/src/pages/login.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../art_tech_pro_client/src/pages/login.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../art_tech_pro_client/src/pages/report.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../art_tech_pro_client/src/pages/report.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../art_tech_pro_client/src/pages/tasks.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../art_tech_pro_client/src/pages/tasks.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../art_tech_pro_client/src/router/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../art_tech_pro_client/src/router/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../art_tech_pro_client/src/sass/base/_base.sass" beforeDir="false" afterPath="$PROJECT_DIR$/../art_tech_pro_client/src/sass/base/_base.sass" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../art_tech_pro_client/src/sass/components/_nav.sass" beforeDir="false" afterPath="$PROJECT_DIR$/../art_tech_pro_client/src/sass/components/_nav.sass" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../art_tech_pro_client/src/sass/components/_task.sass" beforeDir="false" afterPath="$PROJECT_DIR$/../art_tech_pro_client/src/sass/components/_task.sass" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../art_tech_pro_client/src/sass/components/_textfield.sass" beforeDir="false" afterPath="$PROJECT_DIR$/../art_tech_pro_client/src/sass/components/_textfield.sass" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../art_tech_pro_client/src/sass/main.sass" beforeDir="false" afterPath="$PROJECT_DIR$/../art_tech_pro_client/src/sass/main.sass" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../art_tech_pro_client/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../art_tech_pro_client/yarn.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../art_tech_pro_client/src/sass/pages/_auth.sass" beforeDir="false" afterPath="$PROJECT_DIR$/../art_tech_pro_client/src/sass/pages/_auth.sass" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../art_tech_pro_client/src/utils/jwt.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../art_tech_pro_client/src/utils/jwt.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/APIController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/APIController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/ClientController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/ClientController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/EmployeeController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/EmployeeController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/FreelancerController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/FreelancerController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/PeriodController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/PeriodController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/Client.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Client.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/FreelancerRate.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/FreelancerRate.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/Task.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Task.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../docs/timsheet.xlsx" beforeDir="false" afterPath="$PROJECT_DIR$/../docs/timsheet.xlsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -201,7 +223,8 @@
       <workItem from="1577460510436" duration="143000" />
       <workItem from="1577477573253" duration="7982000" />
       <workItem from="1577488232531" duration="14637000" />
-      <workItem from="1577613333894" duration="375000" />
+      <workItem from="1577613333894" duration="7286000" />
+      <workItem from="1577652692496" duration="4253000" />
     </task>
     <servers />
   </component>
@@ -236,12 +259,12 @@
       <screen x="0" y="0" width="1920" height="1048" />
     </state>
     <state x="461" y="165" key="SettingsEditor/0.0.1920.1048/1920.0.1440.870@0.0.1920.1048" timestamp="1575500367672" />
-    <state x="581" y="299" key="com.intellij.ide.util.TipDialog" timestamp="1577613333810">
+    <state x="581" y="299" key="com.intellij.ide.util.TipDialog" timestamp="1577652693518">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="465" y="239" key="com.intellij.ide.util.TipDialog/0.0.1536.832@0.0.1536.832" timestamp="1576571213087" />
     <state x="465" y="240" key="com.intellij.ide.util.TipDialog/0.0.1536.834@0.0.1536.834" timestamp="1575612696256" />
-    <state x="581" y="299" key="com.intellij.ide.util.TipDialog/0.0.1920.1040/1920.0.1440.870@0.0.1920.1040" timestamp="1577613333810" />
+    <state x="581" y="299" key="com.intellij.ide.util.TipDialog/0.0.1920.1040/1920.0.1440.870@0.0.1920.1040" timestamp="1577652693518" />
     <state x="2356" y="250" key="com.intellij.ide.util.TipDialog/0.0.1920.1040/1920.0.1440.870@1920.0.1440.870" timestamp="1577138787524" />
     <state x="616" y="240" key="run.anything.popup" timestamp="1577370928564">
       <screen x="0" y="0" width="1920" height="1040" />

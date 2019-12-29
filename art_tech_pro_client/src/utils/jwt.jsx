@@ -34,5 +34,45 @@ let getEmailFromJWT = () => {
     return email
 }
 
+let getRole = () => {
+    const token = localStorage.getItem('ATP_token')
 
-export { checkJWTValid, getEmailFromJWT }
+    let userType = ""
+    if (token !== 'undefined' && token !== null) {
+
+        jwt(token, { complete: true }).roles.forEach(role => {
+
+            if (role === "ROLE_FREELANCER") {
+                userType = role
+            }
+
+            if (role === "ROLE_EMPLOYEE") {
+                userType = role
+            }
+        });
+    }
+    //console.log(userType)
+    return userType
+}
+
+
+let getRoleByToken = (token) => {
+
+    let userType = ""
+    if (token !== 'undefined' && token !== null) {
+
+        jwt(token, { complete: true }).roles.forEach(role => {
+
+            if (role === "ROLE_FREELANCER") {
+                userType = role
+            }
+
+            if (role === "ROLE_EMPLOYEE") {
+                userType = role
+            }
+        });
+    }
+    return userType
+}
+
+export { checkJWTValid, getEmailFromJWT, getRole, getRoleByToken }

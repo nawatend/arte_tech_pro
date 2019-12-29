@@ -180,7 +180,7 @@ class FreelancerController extends AbstractController
 
 
     /**
-     * @Route("/freelancer/{user}/delete", name="deleteFreelancer", methods={"POST"})
+     * @Route("/freelancer/{user}/delete", name="deleteFreelancer", methods={"GET"})
      * @param User $user
      * @return RedirectResponse
      */

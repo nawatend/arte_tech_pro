@@ -266,7 +266,7 @@ class PeriodController extends AbstractController
     }
 
     /**
-     * @Route("/period/{period}/delete", name="deletePeriod" , methods={"POST"})
+     * @Route("/period/{period}/delete", name="deletePeriod" , methods={"GET"})
      * @param Period $period
      * @return RedirectResponse
      */

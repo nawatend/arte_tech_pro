@@ -6,6 +6,7 @@ import TasksPage from '../pages/tasks'
 import ReportPage from '../pages/report'
 import AddTaskPage from '../pages/addTask'
 import LoginPage from '../pages/login'
+import EditRatePage from '../pages/editRate'
 let ATPRouter = () => {
 
 
@@ -29,6 +30,11 @@ let ATPRouter = () => {
 
                 <Route exact path="/login">
                     <LoginPage />
+                </Route>
+
+
+                <Route exact path="/editrate">
+                    <EditRatePage />
                 </Route>
             </Switch>
         </Router>

@@ -185,7 +185,7 @@ class ClientController extends AbstractController
 
 
     /**
-     * @Route("/client/{client}/delete", name="deleteClient",  methods={"POST"})
+     * @Route("/client/{client}/delete", name="deleteClient",  methods={"GET"})
      * @param Client $client
      * @return RedirectResponse
      */

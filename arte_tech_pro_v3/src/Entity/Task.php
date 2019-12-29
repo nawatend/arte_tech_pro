@@ -87,11 +87,13 @@ class Task
 
     /**
      * @ORM\Column(type="string", nullable=true)
+     * @Groups({"taskInfo"})
      */
     private $TotalHours;
 
     /**
      * @ORM\Column(type="float", nullable=true)
+     * @Groups({"taskInfo"})
      */
     private $totalCost;
 

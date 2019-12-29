@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { FiLogOut } from 'react-icons/fi';
+import { FiLogOut, FiHome } from 'react-icons/fi';
 import { Redirect } from 'react-router-dom'
 import { withRouter } from "react-router-dom";
-import { connect } from 'react-redux'
-import { useSelector, useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { logout } from '../utils/api'
 
 import axios from 'axios'
@@ -20,25 +19,7 @@ let Header = () => {
     const dispatch = useDispatch()
 
 
-    let setStates = async () => {
-        await axios.post(process.env.REACT_APP_API_URL + "/api/getuserinfo", { 'email': getEmailFromJWT() },
-            {
-                headers: {
-                    "Authorization": `Bearer ${token}`
-                }
-            })
-            .then(response => {
-                if (response.status === 200) {
 
-                    // dispatch(allActions.userActions.setUser({ name: response.data.nickname }))
-                    setUser(response.data.nickname)
-                    localStorage.setItem("ATP_userId", response.data.id)
-                }
-
-            }).catch((error) => {
-                console.log(error)
-            })
-    }
 
     let exit = () => {
         logout()
@@ -46,6 +27,25 @@ let Header = () => {
     }
 
     useEffect(() => {
+        let setStates = async () => {
+            await axios.post(process.env.REACT_APP_API_URL + "/api/getuserinfo", { 'email': getEmailFromJWT() },
+                {
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                })
+                .then(response => {
+                    if (response.status === 200) {
+
+                        // dispatch(allActions.userActions.setUser({ name: response.data.nickname }))
+                        setUser(response.data.nickname)
+                        localStorage.setItem("ATP_userId", response.data.id)
+                    }
+
+                }).catch((error) => {
+                    console.log(error)
+                })
+        }
         setStates()
 
         dispatch(allActions.userActions.setUser({ name: user }))

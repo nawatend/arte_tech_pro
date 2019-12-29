@@ -34,6 +34,8 @@ use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
 use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 
+use Symfony\Component\Serializer\NameConverter\MetadataAwareNameConverter;
+
 class APIController extends AbstractController
 {
     /**
@@ -58,19 +60,39 @@ class APIController extends AbstractController
             $user = $userManager->findOneBy(['email' => $postData->email]);
 
 
-            $tasks = $taskManager->findBy(['user' => $user->getId()]);
+            $tasks = $taskManager->findBy(['user' => $user->getId()],["date"=>"DESC"]);
 
             $tasks = $serializer->normalize($tasks, 'json', ['groups' => 'taskInfo']);
+
+            //dd($tasks);
             return $this->json($tasks);
         }
     }
 
     /**
      * @Route("/api/clients", name="api_getClients", methods={"POST"})
+     * @param Request $request
+     * @return JsonResponse
+     * @throws AnnotationException
+     * @throws ExceptionInterface
      */
-    public function getClients()
+    public function getClients(Request $request)
     {
-        return $this->json(["client" => "nawnag"]);
+        $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
+        $metadataAwareNameConverter = new MetadataAwareNameConverter($classMetadataFactory);
+        $norm = [new DateTimeNormalizer(), new ObjectNormalizer($classMetadataFactory,$metadataAwareNameConverter),];
+        $encoders = [new JsonEncoder()];
+        $serializer = new Serializer($norm, $encoders);
+
+        $clientManager = $this->getDoctrine()->getRepository(Client::class);
+
+        if ($request->isMethod('POST')) {
+            $clients = $clientManager->findAll();
+            $clients = $serializer->normalize($clients, 'json', ['groups' => 'clientInfo']);
+
+            return $this->json($clients);
+        }
+        return $this->json("Succeed");
     }
 
     /**
@@ -91,7 +113,48 @@ class APIController extends AbstractController
      */
     public function updateRate(Request $request)
     {
-        return $this->json(["client_byUser" => "nawnassg"]);
+
+        $em = $this->getDoctrine()->getManager();
+        $rateRepo = $this->getDoctrine()->getRepository(FreelancerRate::class);
+
+        if ($request->isMethod('POST')) {
+            $postData = json_decode($request->getContent());
+            $rate = $rateRepo->findOneBy(["user"=>$postData->userId]);
+
+            $rate->setHourRate($postData->hourRate);
+            $rate->setTransportCost($postData->transportCost);
+
+            $em->persist($rate);
+            $em->flush();
+        }
+        return $this->json("Succeed");
+    }
+
+    /**
+     * @Route("/api/getrate", name="api_getRate", methods={"POST"})
+     * @param Request $request
+     * @return JsonResponse
+     * @throws AnnotationException
+     * @throws ExceptionInterface
+     */
+    public function getRate(Request $request)
+    {
+
+        $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
+        $norm = [new DateTimeNormalizer(), new ObjectNormalizer($classMetadataFactory),];
+        $encoders = [new JsonEncoder()];
+        $ser = new Serializer($norm, $encoders);
+
+        $rateRepo = $this->getDoctrine()->getRepository(FreelancerRate::class);
+
+        if ($request->isMethod('POST')) {
+            $postData = json_decode($request->getContent());
+            $rate = $rateRepo->findOneBy(["user"=>$postData->userId]);
+
+            $rateObj = $ser->normalize($rate, 'json', ['groups' => 'rateInfo', ObjectNormalizer::ENABLE_MAX_DEPTH => true]);
+            return $this->json($rateObj);
+        }
+        return $this->json("Succeed");
     }
 
     /**
@@ -140,9 +203,6 @@ class APIController extends AbstractController
         if ($request->isMethod("POST")){
 
             $postData = json_decode($request->getContent());
-
-
-
             //client id
             //user id
             //date

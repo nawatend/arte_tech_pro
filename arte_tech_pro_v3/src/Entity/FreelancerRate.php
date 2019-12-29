@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\FreelancerRateRepository")
@@ -24,11 +25,13 @@ class FreelancerRate
 
     /**
      * @ORM\Column(type="float")
+     * @Groups({"rateInfo"})
      */
     private $hourRate;
 
     /**
      * @ORM\Column(type="float")
+     * @Groups({"rateInfo"})
      */
     private $TransportCost;
 
