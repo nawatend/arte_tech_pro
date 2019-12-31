@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\Period;
+use App\Entity\Task;
 use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -20,11 +22,96 @@ class PageController extends AbstractController
 
     /**
      * @Route("/", name="home", methods={"GET","POST"})
+     * @return RedirectResponse|Response
+     */
+    public function index()
+    {
+
+        $currentUser = $this->getUser();
+
+
+        $userRepo = $this->getDoctrine()->getRepository(User::class);
+        $users = $userRepo->findAll();
+
+        $taskRepo = $this->getDoctrine()->getRepository(Task::class);
+        $tasks = $taskRepo->findAll();
+
+
+        $periodRepo = $this->getDoctrine()->getRepository(Period::class);
+        $periods = $periodRepo->findAll();
+
+
+
+        $employees = [];
+        $freelancers = [];
+        $clients = [];
+
+
+
+        //get all employees
+        foreach($users as $user){
+            if (in_array('ROLE_EMPLOYEE', $user->getRoles())) {
+                $employees[] = $user;
+            }
+            if (in_array('ROLE_FREELANCER', $user->getRoles())) {
+                $freelancers[] = $user;
+            }
+
+            if (in_array('ROLE_CLIENT', $user->getRoles())) {
+                $clients[] = $user;
+            }
+        }
+
+
+        $totalEmployee = count($employees);
+        $totalFreelancer = count($freelancers);
+        $totalClient = count($clients);
+        $totalTask = 0;
+        $totalPeriod = 0;
+
+        if ($currentUser == null) {
+            return $this->redirectToRoute("app_login");
+        } else {
+
+
+            if (in_array("ROLE_CLIENT", $currentUser->getRoles())) {
+               // dd($currentUser->getRoles());
+                return $this->redirectToRoute("clientHome");
+            }
+
+            if (in_array("ROLE_EMPLOYEE", $currentUser->getRoles())) {
+               // dd($currentUser->getRoles());
+                return $this->redirectToRoute("app_logout");
+            }
+
+            if (in_array("ROLE_FREELANCER", $currentUser->getRoles())) {
+              //  dd($currentUser);
+                return $this->redirectToRoute("app_logout");
+            }
+            if (in_array("ROLE_ADMIN",$currentUser->getRoles())) {
+                $username = $this->getUser()->getNickname();
+
+                //dd($currentUser->getRoles());
+                return $this->render('page/index.html.twig', [
+                    'username' => $username, "totalEmployee" =>$totalEmployee
+                    , "totalFreelancer" =>$totalFreelancer
+                    , "totalClient"=> $totalClient
+                    ,'totalTask' =>count($tasks)
+                    , 'totalPeriod' => count($periods)
+                ]);
+            }
+
+        }
+
+    }
+
+    /**
+     * @Route("/create_admin", name="createAdmin", methods={"GET","POST"})
      * @param Request $request
      * @param UserPasswordEncoderInterface $passwordEncoder
      * @return RedirectResponse|Response
      */
-    public function index(Request $request, UserPasswordEncoderInterface $passwordEncoder)
+    public function createAdmin(Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
 
         $user = new User();
@@ -59,7 +146,7 @@ class PageController extends AbstractController
         $user = $this->getUser();
 
 
-      //dd($user);
+        //dd($user);
         if ($user == null) {
             return $this->redirectToRoute("app_login");
 
@@ -67,15 +154,15 @@ class PageController extends AbstractController
             if (in_array("ROLE_CLIENT", $user->getRoles())) {
                 //dd($user->getRoles());
                 return $this->redirectToRoute("clientHome");
-            }else{
+            } else {
                 //dd(in_array("ROLE_CLIENT", $user->getRoles()));
                 $username = $this->getUser()->getNickname();
-                return $this->render('page/index.html.twig', [
-                    'username'=>$username, 'form' => $loginForm->createView()
+                return $this->render('page/create_admin.html.twig', [
+                    'username' => $username, 'form' => $loginForm->createView()
                 ]);
             }
         }
 
-       // return $this->redirectToRoute("app_login");
+        // return $this->redirectToRoute("app_login");
     }
 }

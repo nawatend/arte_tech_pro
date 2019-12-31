@@ -14,7 +14,7 @@
                 <h4 class="c-grey-900 mB-20">Period</h4>
 
                 {% if error is not null %}
-                <div class="alert alert-danger" role="alert">{{ error }}</div>
+                    <div class="alert alert-danger" role="alert">{{ error }}</div>
                 {% endif %}
                 <table class="table table-hover">
                     <thead>
@@ -24,6 +24,7 @@
                         <th scope="col">Start Datum(d-m-Y)</th>
                         <th scope="col">Eind Datum(d-m-Y)</th>
                         <th scope="col">Prestatie IDs</th>
+                        <th scope="col">Bevestigd</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -31,7 +32,21 @@
                         <tr onclick="window.location.href='{{ path('editPeriod', {periodId: period.id}) }}'"
                             class="clickable">
                             <th scope="row">{{ period.id }} </th>
-                            <td>{{ period.client.companyName }} </td>
+
+
+                            {% if period.complain%}
+                                <td>
+                                    {{ period.client.companyName }}
+                                    <span class="icon-holder">
+                                        <i class="c-teal-600 ti-comment"></i>
+                                    </span>
+                                </td>
+                            {% else %}
+                                <td>
+                                    {{ period.client.companyName }}
+                                </td>
+                            {% endif %}
+
                             <td>{{ period.startDate|date('d-m-Y') }} </td>
                             <td>{{ period.endDate|date('d-m-Y') }} </td>
                             <td>
@@ -39,6 +54,18 @@
                                     {{ task.id }},
                                 {% endfor %}
                             </td>
+                            {% if period.isConfirm == true %}
+                                <td>
+                                    <span class="icon-holder">
+                                        <i class="c-green-600 ti-check"></i>
+                                    </span>
+                                </td>
+                            {% else %}
+                                <td><span class="icon-holder">
+                                        <i class="c-red-500 ti-close"></i>
+                                    </span>
+                                </td>
+                            {% endif %}
                         </tr>
                     {% endfor %}
                     </tbody>

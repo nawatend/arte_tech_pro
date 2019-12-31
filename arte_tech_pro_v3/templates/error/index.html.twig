@@ -12,6 +12,14 @@
                 <p class="mB-30 fsz-def c-grey-700">Alleen toegankelijk voor Admin/Managers</p>
             {% endif %}
 
+            {% if is_granted('ROLE_FREELANCER') %}
+                <p class="mB-30 fsz-def c-grey-700">Alleen toegankelijk voor Admin/Managers</p>
+            {% endif %}
+
+            {% if is_granted('ROLE_EMPLOYEE') %}
+                <p class="mB-30 fsz-def c-grey-700">Alleen toegankelijk voor Admin/Managers</p>
+            {% endif %}
+
             {% if is_granted('ROLE_ADMIN') %}
                 <p class="mB-30 fsz-def c-grey-700">Alleen toegankelijk voor klanten</p>
             {% endif %}

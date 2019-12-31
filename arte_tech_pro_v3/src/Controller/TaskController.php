@@ -34,7 +34,7 @@ class TaskController extends AbstractController
         $helper = new Helper();
         $em = $this->getDoctrine()->getRepository(Task::class);
         $tasks = $em->findAll();
-//update all tasks when new properties added
+        //update all tasks when new properties added
         $em = $this->getDoctrine()->getManager();
 
 //        foreach ($tasks as $task){
@@ -43,7 +43,6 @@ class TaskController extends AbstractController
 //            $em->persist($task);
 //            $em->flush();
 //        }
-
         $username = $this->getUser()->getNickname();
         //dd($username);
         return $this->render('task/index.html.twig', [

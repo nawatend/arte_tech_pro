@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Client;
+use App\Entity\Complain;
 use App\Entity\Helper;
 use App\Entity\Period;
 use App\Entity\Task;

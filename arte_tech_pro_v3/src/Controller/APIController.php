@@ -69,7 +69,6 @@ class APIController extends AbstractController
         }
     }
 
-
     /**
      * @Route("/api/clients", name="api_getClients", methods={"POST"})
      * @param Request $request
@@ -140,10 +139,8 @@ class APIController extends AbstractController
                     if($isClientUnique){
                         array_push($userClients, $tasks[$i]["client"]);
                     }
-
                 }
             }
-
             //dd($userClients);
             return $this->json($userClients);
         }
