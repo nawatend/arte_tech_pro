@@ -60,7 +60,7 @@ class APIController extends AbstractController
             $user = $userManager->findOneBy(['email' => $postData->email]);
 
 
-            $tasks = $taskManager->findBy(['user' => $user->getId()],["date"=>"DESC"]);
+            $tasks = $taskManager->findBy(['user' => $user->getId()], ["date" => "DESC"]);
 
             $tasks = $serializer->normalize($tasks, 'json', ['groups' => 'taskInfo']);
 
@@ -68,6 +68,7 @@ class APIController extends AbstractController
             return $this->json($tasks);
         }
     }
+
 
     /**
      * @Route("/api/clients", name="api_getClients", methods={"POST"})
@@ -80,7 +81,7 @@ class APIController extends AbstractController
     {
         $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
         $metadataAwareNameConverter = new MetadataAwareNameConverter($classMetadataFactory);
-        $norm = [new DateTimeNormalizer(), new ObjectNormalizer($classMetadataFactory,$metadataAwareNameConverter),];
+        $norm = [new DateTimeNormalizer(), new ObjectNormalizer($classMetadataFactory, $metadataAwareNameConverter),];
         $encoders = [new JsonEncoder()];
         $serializer = new Serializer($norm, $encoders);
 
@@ -95,14 +96,58 @@ class APIController extends AbstractController
         return $this->json("Succeed");
     }
 
+
     /**
      * @Route("/api/getclientsbyuser", name="api_getClientsByUser", methods={"POST"})
      * @param Request $request
      * @return JsonResponse
+     * @throws AnnotationException
+     * @throws ExceptionInterface
      */
     public function getClientsByUser(Request $request)
     {
-        return $this->json(["client_byUser" => "nawnasssg"]);
+        $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
+        $metadataAwareNameConverter = new MetadataAwareNameConverter($classMetadataFactory);
+        $norm = [new DateTimeNormalizer(), new ObjectNormalizer($classMetadataFactory, $metadataAwareNameConverter),];
+        $encoders = [new JsonEncoder()];
+        $serializer = new Serializer($norm, $encoders);
+        $userClients = [];
+
+        $userManager = $this->getDoctrine()->getRepository(User::class);
+        $taskManager = $this->getDoctrine()->getRepository(Task::class);
+
+
+        if ($request->isMethod('POST')) {
+            $postData = json_decode($request->getContent());
+            $user = $userManager->findOneBy(['email' => $postData->email]);
+
+            $tasks = $taskManager->findBy(['user' => $user->getId()], ["date" => "DESC"]);
+            $tasks = $serializer->normalize($tasks, 'json', ['groups' => 'userClient']);
+
+
+            for ($i = 0; $i < count($tasks); $i++) {
+                if ($i == 0) {
+                    array_push($userClients, $tasks[$i]["client"]);
+                } else {
+
+                    $isClientUnique = true;
+                    foreach ($userClients as $client) {
+                        if ($tasks[$i]['client']["value"] == $client["value"]) {
+                            $isClientUnique = false;
+                            break;
+                        }
+                    }
+                    if($isClientUnique){
+                        array_push($userClients, $tasks[$i]["client"]);
+                    }
+
+                }
+            }
+
+            //dd($userClients);
+            return $this->json($userClients);
+        }
+        return $this->json("Succeed");
     }
 
 
@@ -111,7 +156,8 @@ class APIController extends AbstractController
      * @param Request $request
      * @return JsonResponse
      */
-    public function updateRate(Request $request)
+    public
+    function updateRate(Request $request)
     {
 
         $em = $this->getDoctrine()->getManager();
@@ -119,7 +165,7 @@ class APIController extends AbstractController
 
         if ($request->isMethod('POST')) {
             $postData = json_decode($request->getContent());
-            $rate = $rateRepo->findOneBy(["user"=>$postData->userId]);
+            $rate = $rateRepo->findOneBy(["user" => $postData->userId]);
 
             $rate->setHourRate($postData->hourRate);
             $rate->setTransportCost($postData->transportCost);
@@ -137,7 +183,8 @@ class APIController extends AbstractController
      * @throws AnnotationException
      * @throws ExceptionInterface
      */
-    public function getRate(Request $request)
+    public
+    function getRate(Request $request)
     {
 
         $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
@@ -149,7 +196,7 @@ class APIController extends AbstractController
 
         if ($request->isMethod('POST')) {
             $postData = json_decode($request->getContent());
-            $rate = $rateRepo->findOneBy(["user"=>$postData->userId]);
+            $rate = $rateRepo->findOneBy(["user" => $postData->userId]);
 
             $rateObj = $ser->normalize($rate, 'json', ['groups' => 'rateInfo', ObjectNormalizer::ENABLE_MAX_DEPTH => true]);
             return $this->json($rateObj);
@@ -164,7 +211,8 @@ class APIController extends AbstractController
      * @throws AnnotationException
      * @throws ExceptionInterface
      */
-    public function getUserInfo(Request $request)
+    public
+    function getUserInfo(Request $request)
     {
 
         $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
@@ -191,7 +239,8 @@ class APIController extends AbstractController
      * @return JsonResponse
      * @throws \Exception
      */
-    public function saveTask(Request $request)
+    public
+    function saveTask(Request $request)
     {
 
         $em = $this->getDoctrine()->getManager();
@@ -200,7 +249,7 @@ class APIController extends AbstractController
         $newTask = new Task();
         $helper = new Helper();
 
-        if ($request->isMethod("POST")){
+        if ($request->isMethod("POST")) {
 
             $postData = json_decode($request->getContent());
             //client id
@@ -215,7 +264,7 @@ class APIController extends AbstractController
             $client = $clientRepo->find($postData->clientId);
             $employeeUser = $userRepo->find($postData->workerId);
             $dateFormatted = $helper->convertToGoodDateForDB($postData->date);
-           // dd($helper->getTimeFromTimestamp($postData->startTime));
+            // dd($helper->getTimeFromTimestamp($postData->startTime));
 
             $startTime = $helper->getTimeFromTimestamp($postData->startTime);
             $endTime = $helper->getTimeFromTimestamp($postData->endTime);
@@ -225,9 +274,9 @@ class APIController extends AbstractController
 
             $newTask->setStartTime($startTime);
             $newTask->setEndTime($endTime);
-            $newTask->setTotalHours($helper->getHoursDifference($startTime,$endTime));
+            $newTask->setTotalHours($helper->getHoursDifference($startTime, $endTime));
 
-            $newTask->setTotalCost($helper->calculateTaskTotalCost($client->getHourlyRate(),$helper->getHoursDifference($startTime,$endTime),$client->getTransportCost(),$postData->km));
+            $newTask->setTotalCost($helper->calculateTaskTotalCost($client->getHourlyRate(), $helper->getHoursDifference($startTime, $endTime), $client->getTransportCost(), $postData->km));
             $newTask->setDescription($postData->description);
             $newTask->setUsed($postData->used);
             $newTask->setTransportKM($postData->km);

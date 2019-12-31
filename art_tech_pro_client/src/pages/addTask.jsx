@@ -66,7 +66,6 @@ let AddTaskPage = () => {
                     NotificationManager.success('Succes', 'Prestatie Toegevoegd', 2300)
                     setTimeout(() => { setTaskSaved(true) }, 2400);
                 }
-
             }).catch((error) => {
                 setError("Fout! doe opnieuw")
                 console.log(error)

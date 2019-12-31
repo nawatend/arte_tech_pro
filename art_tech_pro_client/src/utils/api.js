@@ -38,6 +38,8 @@ let logout = () => {
 
     localStorage.removeItem("ATP_token")
     localStorage.removeItem("ATP_userId")
+
+    return true
 }
 
 export {

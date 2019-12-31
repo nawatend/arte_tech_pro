@@ -19,6 +19,15 @@ let TaskList = ({ tasks }) => {
             scale: 1,
             easing: 'ease',
         });
+
+        sr.reveal('.titles__year', {
+            origin: 'bottom',
+            duration: 500,
+            delay: 150,
+            distance: '100px',
+            scale: 1,
+            easing: 'ease',
+        });
     })
 
     return (

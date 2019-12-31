@@ -18,7 +18,7 @@ class Client
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"worker","taskInfo","clientInfo"})
+     * @Groups({"worker","taskInfo","clientInfo","userClient"})
      * @SerializedName("value")
      */
     private $id;
@@ -26,7 +26,7 @@ class Client
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank
-     * @Groups({"worker","taskInfo","clientInfo"})
+     * @Groups({"worker","taskInfo","clientInfo","userClient"})
      * @SerializedName("label")
      */
     private $companyName;

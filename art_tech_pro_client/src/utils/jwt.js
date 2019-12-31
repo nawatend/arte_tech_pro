@@ -4,15 +4,15 @@ import * as jwt from 'jwt-decode';
 let checkJWTValid = () => {
 
     let isJWTValid = false
-
     const token = localStorage.getItem('ATP_token')
 
     if (token !== 'undefined' && token !== null) {
         let decodedToken = jwt(token, { complete: true })
         let dateNow = new Date()
 
-        if (decodedToken.exp < dateNow.getTime()) {
-
+        //console.log(decodedToken)
+        // divided by 1000 cuz getTime() is in milisecond and .exp is in seconds
+        if (decodedToken.exp > dateNow.getTime() / 1000) {
             isJWTValid = true
 
         } else {

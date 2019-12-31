@@ -16,6 +16,7 @@ let Header = () => {
     const [isLogout, setIsLogout] = useState(false)
     const [token] = useState(localStorage.getItem('ATP_token'))
     const [user, setUser] = useState("____________")
+
     const dispatch = useDispatch()
 
 
@@ -46,7 +47,11 @@ let Header = () => {
                     console.log(error)
                 })
         }
-        setStates()
+
+        if (!isLogout) {
+            setStates()
+
+        }
 
         dispatch(allActions.userActions.setUser({ name: user }))
     })

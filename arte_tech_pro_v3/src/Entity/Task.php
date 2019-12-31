@@ -37,7 +37,7 @@ class Task
      *     message = "Choose a valid genre."
      * )
      * @MaxDepth(2)
-     * @Groups({"worker","taskInfo"})
+     * @Groups({"worker","taskInfo","userClient"})
      */
     private $client;
 

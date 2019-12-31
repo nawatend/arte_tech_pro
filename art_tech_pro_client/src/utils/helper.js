@@ -47,72 +47,146 @@ let timeAddSub = (timeOne, timeTwo, flag = true) => { // flag=true to add values
     return tt1 + t1.join(':')
 }
 
-let getMonthIncome = async () => {
+
+//mm/yyyy
+let getMonthAndYear = (stringDate = "00/0000") => {
+
+
+    let date = new Date(stringDate)
+
+    let monthAndYear = {
+        month: parseInt((date.getMonth() + 1)),
+        year: parseInt(date.getFullYear())
+    }
+    console.log(monthAndYear)
+    return monthAndYear
+}
+
+let getMonthIncome = async (month = -1, year = -1, clientId = -1) => {
     let monthTotal = 0
 
     const token = localStorage.getItem('ATP_token')
     const thisMonth = getThisMonth()
     const thisYear = getThisYear()
 
-    await axios.post(process.env.REACT_APP_API_URL + "/api/tasksbyuser", {
-            'email': getEmailFromJWT()
-        }, {
-            headers: {
-                "Authorization": `Bearer ${token}`
-            }
-        })
-        .then(response => {
-            if (response.status === 200 && response.data.lenght > 0) {
+    if (token !== null) {
+        await axios.post(process.env.REACT_APP_API_URL + "/api/tasksbyuser", {
+                'email': getEmailFromJWT()
+            }, {
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            })
+            .then(response => {
+                if (response.status === 200 && response.data.length > 0) {
 
+                    if (month === -1 && year === -1 && clientId === -1) {
+                        response.data.forEach(task => {
+                            let date = new Date(task.date)
+                            // let nextTaskDate = new Date(task[i + 1].date)
+                            if (thisMonth === date.getMonth() && thisYear === date.getFullYear()) {
+                                monthTotal += task.totalCost
+                            }
+                        })
+                    } else if (clientId === 0) {
 
-                response.data.forEach(task => {
-                    let date = new Date(task.date)
-                    // let nextTaskDate = new Date(task[i + 1].date)
-                    if (thisMonth === date.getMonth() && thisYear === date.getFullYear()) {
-                        monthTotal += task.totalCost
+                        response.data.forEach(task => {
+                            let date = new Date(task.date)
+                            // new Date is 1 month late
+                            if (month === (date.getMonth() + 1) && year === date.getFullYear()) {
+
+                                monthTotal += task.totalCost
+                            }
+
+                        })
+                    } else if (month === 0 && year === 0) {
+                        response.data.forEach(task => {
+                            // new Date is 1 month late
+                            if (clientId === task.client.id) {
+                                monthTotal += task.totalCost
+                            }
+
+                        })
+                    } else {
+                        response.data.forEach(task => {
+                            let date = new Date(task.date)
+                            // new Date is 1 month late
+                            if (month === (date.getMonth() + 1) && year === date.getFullYear() && clientId === task.client.id) {
+
+                                monthTotal += task.totalCost
+                            }
+
+                        })
+
                     }
-                })
-            }
-        }).catch((error) => {
-            console.log(error)
-        })
+                }
+            }).catch((error) => {
+                console.log(error)
+            })
+    }
     return monthTotal
 
 }
 
-let getMonthHours = async () => {
-
+let getMonthHours = async (month = -1, year = -1, clientId = -1) => {
     let monthTotal = "00:00"
-
     const token = localStorage.getItem('ATP_token')
     const thisMonth = getThisMonth()
     const thisYear = getThisYear()
 
-    await axios.post(process.env.REACT_APP_API_URL + "/api/tasksbyuser", {
-            'email': getEmailFromJWT()
-        }, {
-            headers: {
-                "Authorization": `Bearer ${token}`
-            }
-        })
-        .then(response => {
-            if (response.status === 200 && response.data.lenght > 0) {
+    if (token !== null) {
+        await axios.post(process.env.REACT_APP_API_URL + "/api/tasksbyuser", {
+                'email': getEmailFromJWT()
+            }, {
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            })
+            .then(response => {
+                if (response.status === 200 && response.data.length > 0) {
 
-                response.data.forEach(task => {
-                    let date = new Date(task.date)
-                    // let nextTaskDate = new Date(task[i + 1].date)
-                    if (thisMonth === date.getMonth() && thisYear === date.getFullYear()) {
-                        monthTotal = timeAddSub(task.TotalHours, monthTotal)
+                    if (month === -1 && year === -1 && clientId === -1) {
+                        response.data.forEach(task => {
+                            let date = new Date(task.date)
+                            // let nextTaskDate = new Date(task[i + 1].date)
+                            if (thisMonth === date.getMonth() && thisYear === date.getFullYear()) {
+                                monthTotal = timeAddSub(task.TotalHours, monthTotal)
+                            }
+                        })
+                    } else if (clientId === 0) {
+
+                        response.data.forEach(task => {
+                            let date = new Date(task.date)
+                            // new Date is 1 month late
+                            if (month === (date.getMonth() + 1) && year === date.getFullYear()) {
+                                monthTotal = timeAddSub(task.TotalHours, monthTotal)
+                            }
+                        })
+                    } else if (month === 0 && year === 0) {
+                        response.data.forEach(task => {
+                            // new Date is 1 month late
+                            if (clientId === task.client.id) {
+                                monthTotal = timeAddSub(task.TotalHours, monthTotal)
+                            }
+
+                        })
+                    } else {
+                        response.data.forEach(task => {
+                            let date = new Date(task.date)
+                            // new Date is 1 month late
+                            if (month === (date.getMonth() + 1) && year === date.getFullYear() && clientId === task.client.id) {
+                                monthTotal = timeAddSub(task.TotalHours, monthTotal)
+                            }
+                        })
                     }
-                })
 
+                }
+            }).catch((error) => {
+                console.log(error)
+            })
+    }
 
-            }
-        }).catch((error) => {
-            console.log(error)
-        })
-
-    //console.log(monthTotal)
+    // console.log(monthTotal)
     return monthTotal
 }
 
@@ -124,27 +198,82 @@ let getRate = async () => {
 
 
     let rate = {}
-    await axios.post(process.env.REACT_APP_API_URL + "/api/getrate", {
-            userId: userId
-        }, {
-            headers: {
-                "Authorization": `Bearer ${token}`
-            }
-        })
-        .then(response => {
-            if (response.status === 200) {
-                // console.log(response.data)
-                rate = response.data
-            }
-        }).catch((error) => {
-            console.log(error)
-        })
+
+    if (token !== null) {
+        await axios.post(process.env.REACT_APP_API_URL + "/api/getrate", {
+                userId: userId
+            }, {
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            })
+            .then(response => {
+                if (response.status === 200) {
+                    // console.log(response.data)
+                    rate = response.data
+                }
+            }).catch((error) => {
+                console.log(error)
+            })
+    }
 
     return rate
+}
+
+
+let getMonthNameFromNumber = (number) => {
+
+    let name = ''
+    switch (number) {
+        case 1:
+            name = "Januari"
+            break;
+
+        case 2:
+            name = "Fabuari"
+            break;
+        case 3:
+            name = "Maart"
+            break;
+        case 4:
+            name = "April"
+            break;
+        case 5:
+            name = "Mei"
+            break;
+        case 6:
+            name = "Juni"
+            break;
+        case 7:
+            name = "Juli"
+            break;
+        case 8:
+            name = "Augustus"
+            break;
+        case 9:
+            name = "September"
+            break;
+        case 10:
+            name = "Oktober"
+            break;
+        case 11:
+            name = "November"
+            break;
+        case 12:
+            name = "December"
+            break;
+
+        default:
+            break;
+    }
+
+    return name
 }
 
 export {
     getMonthIncome,
     getMonthHours,
-    getRate
+    getRate,
+    getMonthNameFromNumber,
+    getMonthAndYear
 }
