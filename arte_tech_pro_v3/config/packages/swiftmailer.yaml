@@ -1,0 +1,12 @@
+swiftmailer:
+#    url: '%env(MAILER_URL)%'
+#    spool: { type: 'memory' }
+    transport:        gmail
+    username:         artetechpro@gmail.com
+    password:         0ArteTechPro
+    host:             smtp.gmail.com
+    port: 465
+    encryption: ssl
+    auth_mode: login
+    spool: { type: 'memory' }
+

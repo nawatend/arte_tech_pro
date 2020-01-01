@@ -1,0 +1,156 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
+    <title>{% block title %}Welcome!{% endblock %}</title>
+
+
+    <style>
+        body {
+            font-family: Roboto, -apple-system, system-ui, BlinkMacSystemFont, Segoe UI, Oxygen, Ubuntu, Cantarell, Droid Sans, Helvetica Neue, sans-serif !important;
+            color: #2D2C2C !important
+        }
+
+        .good {
+            color: forestgreen;
+        }
+
+        .bad {
+            color: #ff4e44;
+        }
+
+        .value {
+            font-size: 14px;
+        }
+
+        .tasks {
+            display: flex;
+            justify-content: flex-start;
+            width: 500px;
+            flex-wrap: wrap;
+
+        }
+
+        .task {
+            width: 200px;
+            border: 1px solid rgba(0, 0, 0, .0625);
+            margin: 4px;
+        }
+
+        .link {
+            background-color: dodgerblue;
+            text-align: center;
+            padding: 4px 8px;
+            text-transform: uppercase;
+            width: 120px;
+            color: white;
+            font-weight: 600;
+            border-radius: 4px;
+            cursor: pointer;
+
+        }
+
+        .im {
+            color: #2D2C2C !important;
+        }
+
+        a {
+            text-decoration: none !important;
+
+            color: white !important;
+        }
+    </style>
+</head>
+
+<body class="app">
+<div id="loader">
+    <div class="spinner"></div>
+</div>
+<div>
+    <div class="">
+        <main class="main-content bgc-grey-100">
+            <div id="mainContent">
+                <div class="">
+                    <div class="row pB-140">
+                        <div class="col-md-12">
+                            <div class="bgc-white bd bdrs-3 p-20">
+                                Aan: {{ period.client.companyName }}
+                                <h2 class="c-grey-900 mB-20">Period #{{ period.id }} van [12/12/2019 -
+                                    30/12/2019]
+                                    {% if period.isConfirm %}
+                                        <span class="icon-holder good">
+                        <i class="good ti-check"></i> Bevestigd </span>
+                                    {% else %}
+                                        <span class="icon-holder bad">
+                        <i class="bad ti-info-alt"></i> Nog te bevestigen </span>
+                                    {% endif %}
+                                </h2>
+                                <hr>
+                                <div class="link"> <a href="{{ url('app_login') }}">AANMELDEN</a></div>
+                                <div class="tasks">
+                                    {% for task in tasksOfPeriod %}
+                                        <div class=" task bdT pX-40 pY-30">
+                                            <h3>Prestatie #{{ task.id }}</h3>
+                                            <h4>Door: {{ task.user.nickname }}</h4>
+
+                                            <h5>Op {{ task.date|date('d-m-y') }} [{{ task.startTime|date('H:i:s') }}
+                                                -> {{ task.endTime|date('H:i:s') }}] = {{ task.totalHours }} uren
+                                                gewerkt</h5>
+                                            <div>-----------------------------------
+                                            </div>
+                                            <div class=" peer">
+                                                <h5 class=" fw-600 c-teal-300">
+                                                    Totaal kost van dit prestatie
+                                                </h5>
+                                                <div class="value c-teal-200">
+                                                    {{ task.totalCost|number_format(2, ',', ' ') }} EUR
+                                                </div>
+                                            </div>
+                                            <div>-----------------------------------
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="total__cost_period__pdf bdT pX-40 pY-10">
+
+                            <div class="col-md-4 col-l-4">
+                                <h2 class="fw-600 c-teal-800">
+                                    Totaal kost van dit period
+                                </h2>
+                                <h3 class="value c-teal-800">
+                                    {{ totalCostOfPeriod|number_format(2, ',', ' ') }} EUR
+                                </h3>
+                            </div>
+                            {% if period.isConfirm == true %}
+                                <div>
+
+                                    <h3><span class="icon-holder good"><i class="good ti-check"></i> Bevestigd </span>
+                                    </h3>
+                                    {% if period.complain == true %}
+                                        <h6><span class=" c-teal-800"> Opmerking:</span> {{ period.complain.message }}
+                                        </h6>
+                                    {% else %}
+                                        <h6><span class=" c-teal-800"> Opmerking:</span> / </h6>
+                                    {% endif %}
+                                </div>
+
+                            {% endif %}
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+{% block javascripts %}
+    <script type="text/javascript" src="{{ asset('template/vendor.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('template/bundle.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('app.js') }}"></script>
+{% endblock %}
+</body>
+</html>

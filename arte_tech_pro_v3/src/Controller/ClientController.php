@@ -112,6 +112,7 @@ class ClientController extends AbstractController
             // create new user
             $user->setEmail($clientData['email']);
             $user->setPassword($passwordEncoder->encodePassword($user, $clientData['password']));
+            $user->setNickname($clientData['companyName']);
             $user->setRoles(['ROLE_CLIENT']);
 
             $errors = $validator->validate($user);
@@ -140,6 +141,7 @@ class ClientController extends AbstractController
                 //create new client based on new user
                 $client->setUser($user);
                 $client->setCompanyName($clientData['companyName']);
+
                 $client->setHourlyRate($clientData['hourlyRate']);
                 $client->setTransportCost($clientData['transportCost']);
                 $client->setTelephone($clientData['telephone']);
@@ -156,13 +158,15 @@ class ClientController extends AbstractController
     /**
      * @Route("/client/update", name="updateClient",  methods={"GET","POST"})
      * @param Request $request
+     * @param UserPasswordEncoderInterface $passwordEncoder
+     * @param ValidatorInterface $validator
      * @return RedirectResponse|Response
      */
-    public function update(Request $request)
+    public function update(Request $request , UserPasswordEncoderInterface $passwordEncoder, ValidatorInterface $validator)
     {
         $clientManager = $this->getDoctrine()->getRepository(Client::class);
         $client = $clientManager->find($request->request->get('form')['clientId']);
-
+        $userRepo = $this->getDoctrine()->getRepository(User::class);
 
         if ($request->isMethod("POST")) {
             $clientData = $request->request->get("form");
@@ -175,6 +179,14 @@ class ClientController extends AbstractController
             $client->setTelephone($clientData['telephone']);
 
             $em->persist($client);
+            $em->flush();
+
+            //dd($clientData);
+
+            $user = $userRepo->find($client->getUser());
+            //only able to update company name
+            $user->setNickname($clientData['companyName']);
+            $em->persist($user);
             $em->flush();
 
             return $this->redirectToRoute("clients");

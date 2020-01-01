@@ -24,4 +24,12 @@
   align-items: center;
 }
 
+.total__cost_period__pdf {
+  background-color: #fff;
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
 /*# sourceMappingURL=main.css.map */

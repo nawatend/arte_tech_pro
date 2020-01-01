@@ -1,0 +1,148 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
+    <title>{% block title %}Welcome!{% endblock %}</title>
+
+
+    <style>
+        body {
+            font-family: Roboto, -apple-system, system-ui, BlinkMacSystemFont, Segoe UI, Oxygen, Ubuntu, Cantarell, Droid Sans, Helvetica Neue, sans-serif;
+            color: #2D2C2C;
+        }
+
+        .good {
+            color: forestgreen;
+        }
+
+        .bad {
+            color: #ff4e44;
+        }
+
+        .value {
+            font-size: 14px;
+        }
+
+    </style>
+    {% block stylesheets %}
+
+        {{ encore_entry_link_tags('app') }}
+
+    {% endblock %}
+</head>
+
+<body class="app">
+<div id="loader">
+    <div class="spinner"></div>
+</div>
+<div>
+    <div class="">
+        <main class="main-content bgc-grey-100">
+            <div id="mainContent">
+                <div class="">
+                    <div class="row pB-140">
+                        <div class="col-md-12">
+                            <div class="bgc-white bd bdrs-3 p-20">
+                                Aan: {{ period.client.companyName }}, U hebt een nieuwe period te bevestigen.
+                                <h2 class="c-grey-900 mB-20">Period #{{ period.id }} van [12/12/2019 -
+                                    30/12/2019]
+                                    {% if period.isConfirm %}
+                                        <span class="icon-holder good">
+                        <i class="good ti-check"></i> Bevestigd </span>
+                                    {% else %}
+                                        <span class="icon-holder bad">
+                        <i class="bad ti-info-alt"></i> Nog te bevestigen </span>
+                                    {% endif %}
+                                </h2>
+                                <hr>
+                                {% for task in tasksOfPeriod %}
+                                    <div class="bdT pX-40 pY-30">
+                                        <h3>Prestatie #{{ task.id }}</h3>
+                                        <h4>Door: {{ task.user.nickname }}</h4>
+
+                                        <h5>Op {{ task.date|date('d-m-y') }} [{{ task.startTime|date('H:i:s') }}
+                                            -> {{ task.endTime|date('H:i:s') }}] = {{ task.totalHours }} uren
+                                            gewerkt</h5>
+                                        <h5 class="fw-600 c-grey">
+                                            Beschrijving
+                                        </h5>
+                                        <p>{{ task.description }}</p>
+                                        <h5 class="fw-600 c-grey">
+                                            Gebruikte material
+                                        </h5>
+                                        <p>{{ task.used }}</p>
+
+                                        <div class="peer">
+                                            <h5 class=" fw-600 title">
+                                                Uur tarief
+                                            </h5>
+                                            <div class="value">
+                                                {{ task.client.hourlyRate }} EUR
+                                            </div>
+                                        </div>
+                                        <div class="peer">
+                                            <h5 class=" fw-600 title">
+                                                Transport Kost
+                                            </h5>
+                                            <div class="value">
+                                                {{ task.client.transportCost }} EUR x {{ task.transportKM }} km
+                                                = {{ task.client.transportCost * task.transportKM }} EUR
+                                            </div>
+                                        </div>
+                                        <div>----------------------------------------------------------------------
+                                        </div>
+                                        <div class=" peer">
+                                            <h5 class=" fw-600 c-teal-300">
+                                                Totaal kost van dit prestatie
+                                            </h5>
+                                            <div class="value c-teal-200">
+                                                {{ task.totalCost|number_format(2, ',', ' ') }} EUR
+                                            </div>
+                                        </div>
+                                        <div>----------------------------------------------------------------------
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="total__cost_period__pdf bdT pX-40 pY-10">
+
+                            <div class="col-md-4 col-l-4">
+                                <h2 class="fw-600 c-teal-800">
+                                    Totaal kost van dit period
+                                </h2>
+                                <h3 class="value c-teal-800">
+                                    {{ totalCostOfPeriod|number_format(2, ',', ' ') }} EUR
+                                </h3>
+                            </div>
+                            {% if period.isConfirm == true %}
+                                <div>
+
+                                    <h3><span class="icon-holder good"><i class="good ti-check"></i> Bevestigd </span>
+                                    </h3>
+                                    {% if period.complain == true %}
+                                        <h6><span class=" c-teal-800"> Opmerking:</span> {{ period.complain.message }}
+                                        </h6>
+                                    {% else %}
+                                        <h6><span class=" c-teal-800"> Opmerking:</span> / </h6>
+                                    {% endif %}
+                                </div>
+
+                            {% endif %}
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+{% block javascripts %}
+    <script type="text/javascript" src="{{ asset('template/vendor.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('template/bundle.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('app.js') }}"></script>
+{% endblock %}
+</body>
+</html>

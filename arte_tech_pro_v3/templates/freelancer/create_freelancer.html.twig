@@ -19,22 +19,30 @@
                 <div class="form-group col-md-6">
 
                     {{ form_label(form.password,'Wachtwoord') }} {{ form_widget(form.password, {'attr': {'class': 'form-control','id':'inputPassword4'}}) }}
-                    <div class="form-check"><label class="form-check-label"><input class="form-check-input" id="show_password" type="checkbox"> Toon wachtwoord</label></div>
+                    <div class="form-check"><label class="form-check-label"><input class="form-check-input"
+                                                                                   id="show_password" type="checkbox">
+                            Toon wachtwoord</label></div>
                 </div>
-                                <div class="form-group col-md-6">
-                                    {{ form_label(form.transportCost,'Transport kost') }} {{ form_widget(form.transportCost, {'attr': {'class': 'form-control','id':'inputTransportCost1'}}) }}
-                                </div>
+                <div class="form-group col-md-12">
+                    {{ form_label(form.nickname,'Gebruikersnaam') }} {{ form_widget(form.nickname, {'attr': {'class': 'form-control','id':'inputGebruiks1'}}) }}
+                </div>
+                <div class="form-group col-md-6">
+                    {{ form_label(form.transportCost,'Transport kost') }} {{ form_widget(form.transportCost, {'attr': {'class': 'form-control','id':'inputTransportCost1'}}) }}
+                </div>
 
-                                <div class="form-group col-md-6">
-                                    {{ form_label(form.hourRate, 'Uur tarief') }} {{ form_widget(form.hourRate, {'attr': {'class': 'form-control','id':'inputhourRate1'}}) }}
-                                </div>
+                <div class="form-group col-md-6">
+                    {{ form_label(form.hourRate, 'Uur tarief') }} {{ form_widget(form.hourRate, {'attr': {'class': 'form-control','id':'inputhourRate1'}}) }}
+                </div>
 
-                <div class="alert alert-danger remove" id="error_message" role="alert">Wachtwoorden moeten zelfde zijn!</div>
+                <div class="alert alert-danger remove" id="error_message" role="alert">Wachtwoorden moeten zelfde
+                    zijn!
+                </div>
             </div>
             {{ form_widget(form.save, {'attr':{"class":"btn btn-primary"},'label': 'Opslaan'}) }}
 
-            {% if form.freelancerId is defined  %}
-                <a class="btn btn-danger"  href="{{ path('deleteFreelancer',{user: user.id}) }}">Verwijder</a>
+            {% if form.freelancerId is defined %}
+                <a class="btn btn-danger" href="{{ path('deleteFreelancer',{user: user.id}) }}">Verwijder</a>
+
             {% endif %}
             {{ form_end(form) }}
         </div>

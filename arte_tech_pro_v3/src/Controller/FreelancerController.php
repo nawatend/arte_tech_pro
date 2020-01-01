@@ -11,6 +11,7 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -68,12 +69,13 @@ class FreelancerController extends AbstractController
             ->setParameter('userId', $freelancerId);
 
         $freelancer = $queryRates->getQuery()->getResult()[0];
-        //dd($freelancer);
+        //dd($freelancer->getUser());
 
         $updateFreelancerForm = $this->createFormBuilder()
             ->add("freelancerId", HiddenType::class, ['attr' => ["value" => $freelancer->getUser()->getId()]])
-            ->add("email", EmailType::class, ['attr' => ["value" => $freelancer->getUser()->getEmail()]])
-            ->add("password", PasswordType::class, ['attr' => ["value" => $freelancer->getUser()->getPassword()]])
+            ->add("email", EmailType::class, ['disabled' => true, 'attr' => ["value" => $freelancer->getUser()->getEmail()]])
+            ->add("password", PasswordType::class, ['disabled' => true, 'attr' => ["value" => $freelancer->getUser()->getPassword()]])
+            ->add("nickname", TextType::class, ['attr' => ["value" => $freelancer->getUser()->getNickname()]])
             ->add("transportCost", NumberType::class, ['attr' => ["value" => $freelancer->getTransportCost()]])
             ->add("hourRate", NumberType::class, ['attr' => ["value" => $freelancer->getHourRate()]])
             ->add('save', SubmitType::class)
@@ -82,7 +84,7 @@ class FreelancerController extends AbstractController
             ->setMethod('POST')
             ->getForm();
         $username = $this->getUser()->getNickname();
-        return $this->render("freelancer/create_freelancer.html.twig", ['username' => $username, 'form' => $updateFreelancerForm->createView(), 'user' => $freelancer]);
+        return $this->render("freelancer/create_freelancer.html.twig", ['username' => $username, 'form' => $updateFreelancerForm->createView(), 'user' => $freelancer->getUser()]);
     }
 
 
@@ -93,8 +95,9 @@ class FreelancerController extends AbstractController
     {
 
         $newFreelancerForm = $this->createFormBuilder()
-            ->add("email", EmailType::class)
-            ->add("password", PasswordType::class)
+            ->add("email", EmailType::class, ['attr' => ['autocomplete' => 'null']])
+            ->add("password", PasswordType::class, ['attr' => ['autocomplete' => "new-password"]])
+            ->add("nickname", TextType::class, ['attr' => ['autocomplete' => "new-password"]])
             ->add("transportCost", NumberType::class)
             ->add("hourRate", NumberType::class)
             ->add('save', SubmitType::class)
@@ -123,6 +126,7 @@ class FreelancerController extends AbstractController
             // create new user
             $user->setEmail($freelancerData['email']);
             $user->setPassword($passwordEncoder->encodePassword($user, $freelancerData['password']));
+            $user->setNickname($freelancerData['nickname']);
             $user->setRoles(['ROLE_FREELANCER']);
             $em->persist($user);
             $em->flush();
@@ -151,7 +155,7 @@ class FreelancerController extends AbstractController
         $user = $userManager->find($request->request->get('form')['freelancerId']);
 
         $rateRepo = $this->getDoctrine()->getRepository(FreelancerRate::class);
-        $rate = $rateRepo->findOneBy(['user'=>$user]);
+        $rate = $rateRepo->findOneBy(['user' => $user]);
 
         //dd($rate);
         if ($request->isMethod("POST")) {
@@ -159,9 +163,7 @@ class FreelancerController extends AbstractController
             $em = $this->getDoctrine()->getManager();
 
             //update freelancer(user)
-            $user->setEmail($freelancerData['email']);
-            $user->setPassword($passwordEncoder->encodePassword($user, $freelancerData['password']));
-
+            $user->setNickname($freelancerData['nickname']);
 
             $em->persist($user);
             $em->flush();
@@ -187,41 +189,16 @@ class FreelancerController extends AbstractController
     public function delete(User $user)
     {
         $em = $this->getDoctrine()->getManager();
+
+        $removeRate = $this->getDoctrine()->getRepository(FreelancerRate::class)->findOneBy(['user'=>$user]);
+        //dd($removeRate);
+
+        $em->remove($removeRate);
+        $em->flush();
+
         $em->remove($user);
         $em->flush();
         return $this->redirectToRoute('freelancers');
     }
-
-    /**
-     * @Route("/user_{email}", name="apiGetUseByEmail", methods={"GET"})
-     * @param $email
-     * @return Response
-     * @throws AnnotationException
-     * @throws ExceptionInterface
-     */
-    public function getUserInfo($email)
-    {
-
-        $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
-        $norm = [new DateTimeNormalizer(), new ObjectNormalizer($classMetadataFactory),];
-        $encoders = [new JsonEncoder()];
-        $ser = new Serializer($norm, $encoders);
-
-
-        $userManager = $this->getDoctrine()->getRepository(User::class);
-        $user = $userManager->findOneBy(['email' => $email]);
-
-        // $userObj = $ser->serialize($user,'json',[ObjectNormalizer::ENABLE_MAX_DEPTH => true]);
-        $userObj = $ser->normalize($user, 'json', ['groups' => 'worker', ObjectNormalizer::ENABLE_MAX_DEPTH => true]);
-        //dd($userObj);
-        //$userObj = json_encode($userObj);
-
-
-        //dd($userObj);
-        return $this->json($userObj);
-    }
-
-
-
 
 }

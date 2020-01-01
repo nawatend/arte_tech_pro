@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 
-
 use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -32,7 +31,7 @@ class EmployeeController extends AbstractController
         $employees = [];
 
         //get all employees
-        foreach($users as $user){
+        foreach ($users as $user) {
             if (in_array('ROLE_EMPLOYEE', $user->getRoles())) {
                 $employees[] = $user;
             }
@@ -41,7 +40,7 @@ class EmployeeController extends AbstractController
 
         $username = $this->getUser()->getNickname();
         return $this->render('employee/index.html.twig', [
-            'username'=>$username, "employees" => $employees
+            'username' => $username, "employees" => $employees
         ]);
     }
 
@@ -57,15 +56,13 @@ class EmployeeController extends AbstractController
         $employee = $employeeManager->find($employeeId);
 
 
-
-
         // dd($employee->getUser()->getPassword());
 
         $updateEmployeeForm = $this->createFormBuilder()
-            ->add("employeeId", HiddenType::class , ['attr'=> ["value"=>$employee->getId()]])
-            ->add("email", EmailType::class , [ 'attr'=> ["value"=>$employee->getEmail()]])
-            ->add("password", PasswordType::class , ['attr'=> ["value"=>$employee->getPassword()]])
-//            ->add("companyName", TextType::class ,['attr'=> ["value"=>$employee->getCompanyName()]])
+            ->add("employeeId", HiddenType::class, ['attr' => ["value" => $employee->getId()]])
+            ->add("email", EmailType::class, ['disabled' => true, 'attr' => ["value" => $employee->getEmail()]])
+            ->add("password", PasswordType::class, ['disabled' => true, 'attr' => ["value" => $employee->getPassword()]])
+            ->add("nickname", TextType::class, ['attr' => ["value" => $employee->getNickname()]])
 //            ->add("telephone", TextType::class,['attr'=> ["value"=>$employee->getTelephone()]])
 //            ->add("transportCost", NumberType::class,['attr'=> ["value"=>$employee->getTransportCost()]])
 //            ->add("hourlyRate", NumberType::class,['attr'=> ["value"=>$employee->getHourlyRate()]])
@@ -75,16 +72,19 @@ class EmployeeController extends AbstractController
             ->setMethod('POST')
             ->getForm();
         $username = $this->getUser()->getNickname();
-        return $this->render("employee/create_employee.html.twig",['username'=>$username,'form'=>$updateEmployeeForm->createView(),'user' =>$employee]);
+        return $this->render("employee/create_employee.html.twig", ['username' => $username, 'form' => $updateEmployeeForm->createView(), 'user' => $employee]);
     }
+
     /**
      * @Route("/create_employee", name="createEmployee", methods={"GET"})
      */
-    public  function  create(){
+    public function create()
+    {
 
         $newEmployeeForm = $this->createFormBuilder()
-            ->add("email", EmailType::class)
-            ->add("password", PasswordType::class )
+            ->add("email", EmailType::class, ['attr' => ['autocomplete' => 'null']])
+            ->add("password", PasswordType::class, ['attr' => ['autocomplete' => "new-password"]])
+            ->add("nickname", TextType::class, ['attr' => ['autocomplete' =>"new-password"]])
 //            ->add("telephone", TextType::class)
 //            ->add("transportCost", NumberType::class)
 //            ->add("hourlyRate", NumberType::class)
@@ -93,7 +93,7 @@ class EmployeeController extends AbstractController
             ->setMethod('POST')
             ->getForm();
         $username = $this->getUser()->getNickname();
-        return $this->render("employee/create_employee.html.twig",['username'=>$username,'form'=>$newEmployeeForm->createView()]);
+        return $this->render("employee/create_employee.html.twig", ['username' => $username, 'form' => $newEmployeeForm->createView()]);
     }
 
 
@@ -114,7 +114,8 @@ class EmployeeController extends AbstractController
 
             // create new user
             $user->setEmail($employeeData['email']);
-            $user->setPassword($passwordEncoder->encodePassword($user,$employeeData['password']));
+            $user->setPassword($passwordEncoder->encodePassword($user, $employeeData['password']));
+            $user->setNickname($employeeData['nickname']);
             $user->setRoles(['ROLE_EMPLOYEE']);
             $em->persist($user);
             $em->flush();
@@ -135,7 +136,7 @@ class EmployeeController extends AbstractController
     public function update(Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
         $userManager = $this->getDoctrine()->getRepository(User::class);
-        $user =  $userManager->find($request->request->get('form')['employeeId']);
+        $user = $userManager->find($request->request->get('form')['employeeId']);
 
 
         if ($request->isMethod("POST")) {
@@ -143,9 +144,7 @@ class EmployeeController extends AbstractController
             $em = $this->getDoctrine()->getManager();
 
             //update employee(user)
-            $user->setEmail($employeeData['email']);
-            $user->setPassword($passwordEncoder->encodePassword($user,$employeeData['password']));
-
+              $user->setNickname($employeeData['nickname']);
 
             $em->persist($user);
             $em->flush();
@@ -162,7 +161,8 @@ class EmployeeController extends AbstractController
      * @param User $user
      * @return RedirectResponse
      */
-    public function delete(User $user){
+    public function delete(User $user)
+    {
         $em = $this->getDoctrine()->getManager();
         $em->remove($user);
         $em->flush();

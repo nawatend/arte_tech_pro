@@ -2,18 +2,34 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3536085b-9b7e-4620-868a-e0a508ff002a" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/templates/page/create_admin.html.twig" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/config/packages/dev/swiftmailer.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/config/packages/swiftmailer.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/config/packages/test/swiftmailer.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/client_frontend/pdf_template.html.twig" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/client_frontend/test.html.twig" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/emails/period.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/arte_tech_pro_v2.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/arte_tech_pro_v2.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/packages/security.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/packages/security.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Controller/APIController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/APIController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Controller/PageController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/PageController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/css/base/_helpers.sass" beforeDir="false" afterPath="$PROJECT_DIR$/assets/css/base/_helpers.sass" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/css/main.css" beforeDir="false" afterPath="$PROJECT_DIR$/assets/css/main.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/css/main.css.map" beforeDir="false" afterPath="$PROJECT_DIR$/assets/css/main.css.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/composer.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/composer.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/bundles.php" beforeDir="false" afterPath="$PROJECT_DIR$/config/bundles.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/ClientController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/ClientController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/ClientFrontendController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/ClientFrontendController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/EmployeeController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/EmployeeController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/FreelancerController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/FreelancerController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Controller/PeriodController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/PeriodController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Controller/TaskController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/TaskController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/error/index.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/error/index.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/Helper.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Helper.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/symfony.lock" beforeDir="false" afterPath="$PROJECT_DIR$/symfony.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/client_frontend/client_period_details.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/client_frontend/client_period_details.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/employee/create_employee.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/employee/create_employee.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/freelancer/create_freelancer.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/freelancer/create_freelancer.html.twig" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/page/index.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/page/index.html.twig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/partials/sidebar.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/partials/sidebar.html.twig" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/period/create_period.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/period/create_period.html.twig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/period/index.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/period/index.html.twig" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -123,6 +139,13 @@
       <path value="$PROJECT_DIR$/vendor/lexik/jwt-authentication-bundle" />
       <path value="$PROJECT_DIR$/vendor/symfony/serializer" />
       <path value="$PROJECT_DIR$/vendor/nelmio/cors-bundle" />
+      <path value="$PROJECT_DIR$/vendor/sabberworm/php-css-parser" />
+      <path value="$PROJECT_DIR$/vendor/phenx/php-svg-lib" />
+      <path value="$PROJECT_DIR$/vendor/phenx/php-font-lib" />
+      <path value="$PROJECT_DIR$/vendor/dompdf/dompdf" />
+      <path value="$PROJECT_DIR$/vendor/egulias/email-validator" />
+      <path value="$PROJECT_DIR$/vendor/symfony/swiftmailer-bundle" />
+      <path value="$PROJECT_DIR$/vendor/swiftmailer/swiftmailer" />
     </include_path>
   </component>
   <component name="ProjectId" id="1UW1Ka7VUiwgKOqybQ7nVSjUvlf" />
@@ -139,7 +162,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/templates/page" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/templates/client_frontend" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -151,11 +174,11 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\ntend\Desktop\AAA School 2019  2020\CMSDev\AA einde project\arte_tech_pro\arte_tech_pro_v3\templates\client_frontend" />
       <recent name="C:\Users\ntend\Desktop\AAA School 2019  2020\CMSDev\AA einde project\arte_tech_pro\arte_tech_pro_v3\templates\page" />
       <recent name="C:\Users\ntend\Desktop\AAA School 2019  2020\CMSDev\AA einde project\arte_tech_pro_v3\templates\partials" />
       <recent name="C:\Users\ntend\Desktop\AAA School 2019  2020\CMSDev\AA einde project\arte_tech_pro_v3\templates" />
       <recent name="C:\Users\ntend\Desktop\AAA School 2019  2020\CMSDev\AA einde project\arte_tech_pro_v3\config" />
-      <recent name="C:\Users\ntend\Desktop\AAA School 2019  2020\CMSDev\AA einde project\arte_tech_pro_v3\assets\css" />
     </key>
   </component>
   <component name="ServiceViewManager">
@@ -210,7 +233,7 @@
       <workItem from="1577652692496" duration="4903000" />
       <workItem from="1577704829528" duration="6468000" />
       <workItem from="1577747137653" duration="11168000" />
-      <workItem from="1577805880426" duration="2898000" />
+      <workItem from="1577805880426" duration="26643000" />
     </task>
     <servers />
   </component>
@@ -225,10 +248,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="627" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1920.1040/1920.0.1440.870@0.0.1920.1040" timestamp="1575677196982" />
-    <state x="690" y="274" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog" timestamp="1577559846165">
+    <state x="690" y="274" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog" timestamp="1577903365139">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="690" y="274" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog/0.0.1920.1040/1920.0.1440.870@0.0.1920.1040" timestamp="1577559846165" />
+    <state x="690" y="274" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog/0.0.1920.1040/1920.0.1440.870@0.0.1920.1040" timestamp="1577903365139" />
     <state x="545" y="328" key="ComposerInitDialogKey" timestamp="1576663998294">
       <screen x="0" y="0" width="1536" height="832" />
     </state>

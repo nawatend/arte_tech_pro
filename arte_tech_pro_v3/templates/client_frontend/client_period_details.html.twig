@@ -7,7 +7,6 @@
         <div class="col-md-12">
             <div class="bgc-white bd bdrs-3 p-20">
                 <h4 class="c-grey-900 mB-20">Period #{{ period.id }} Informatie van [12/12/2019 - 30/12/2019]
-
                     {% if period.isConfirm %}
                         <span class="icon-holder c-green-600">
                         <i class="c-green-600 ti-check"></i> Bevestigd </span>
@@ -17,6 +16,9 @@
                     {% endif %}
                 </h4>
                 Aan: {{ period.client.companyName }}
+                <a href="{{ path('exportPeriodPDF', {periodId: period.id}) }}"> - DOWNLOAD PDF</a>
+
+
                 {% for task in tasksOfPeriod %}
                     <div class="bdT pX-40 pY-30">
                         <h3>Prestatie #{{ task.id }}</h3>
@@ -108,10 +110,13 @@
             </div>
         {% else %}
             <div>
-
                 <h3><span class="icon-holder c-teal-800"><i class="c-teal-800 ti-check"></i> Bevestigd </span>
                 </h3>
+                {% if period.complain == true %}
                 <h6><span class=" c-teal-800"> Opmerking:</span> {{ period.complain.message }} </h6>
+                    {% else %}
+                        <h6><span class=" c-teal-800"> Opmerking:</span> / </h6>
+                {% endif %}
             </div>
 
         {% endif %}

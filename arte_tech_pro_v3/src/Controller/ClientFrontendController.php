@@ -13,6 +13,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 class ClientFrontendController extends AbstractController
 {
@@ -143,15 +145,10 @@ class ClientFrontendController extends AbstractController
     /**
      * @Route("/export_pdf_period_{periodId}", name="exportPeriodPDF")
      * @param $periodId
-     * @return Response
      */
     public function exportPeriodPDF($periodId)
     {
-
-        $error = null;
-        if (isset($_GET['error'])) {
-            $error = $_GET['error'];
-        }
+        //****************************************************************************
 
         $periodRepo = $this->getDoctrine()->getRepository(Period::class);
         $taskRepo = $this->getDoctrine()->getRepository(Task::class);
@@ -164,32 +161,38 @@ class ClientFrontendController extends AbstractController
             $totalCost += $task->getTotalCost();
         }
 
-        $confirmForm = $this->createFormBuilder()
-            ->add("periodId", HiddenType::class, ['attr' => ["value" => $period->getId()]])
-            ->add('toConfirm', TextType::class)
-            ->add('comment', TextType::class, ["required" => false])
-            ->add('save', SubmitType::class)
-            ->setAction($this->generateUrl('confirmPeriod'))
-            ->setMethod('POST')
-            ->getForm();
 
 
-        //dd($tasksOfPeriod);
-        $username = $this->getUser()->getNickname();
-//        return $this->render('client_frontend/client_period_details.html.twig', [
-//            'error' => $error, 'form' => $confirmForm->createView(), "tasksOfPeriod" => $tasksOfPeriod, "period" => $period, 'username' => $username, 'totalCostOfPeriod' => $totalCost
-//        ]);
-//    }
+        //********************************************************************
 
-//        return $this->$knpSnappy->generateFromHtml(
-//            $this->renderView(
-//                'client_frontend/client_period_details.html.twig',
-//                [
-//                    'error' => $error, 'form' => $confirmForm->createView(), "tasksOfPeriod" => $tasksOfPeriod, "period" => $period, 'username' => $username, 'totalCostOfPeriod' => $totalCost
-//                ]
-//            ),
-//            './file.pdf'
-//        );
+        $pdfOptions = new Options();
+        $pdfOptions->set('defaultFont', 'Laca');
+
+        // Instantiate Dompdf with our options
+        $dompdf = new Dompdf($pdfOptions);
+
+        $html = $this->renderView('client_frontend/pdf_template.html.twig', [
+            "tasksOfPeriod" => $tasksOfPeriod, "period" => $period, 'totalCostOfPeriod' => $totalCost
+        ]);
+
+
+        // Load HTML to Dompdf
+        $dompdf->loadHtml($html);
+
+        // (Optional) Setup the paper size and orientation 'portrait' or 'portrait'
+        $dompdf->setPaper('A4', 'portrait');
+
+        // Render the HTML as PDF
+        $dompdf->render();
+
+        // Output the generated PDF to Browser (force download)
+        $dompdf->stream("test.pdf", [
+            "Attachment" => true
+        ]);
+
+        dd();
+
+
 
     }
 }

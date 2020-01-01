@@ -8,6 +8,7 @@ use App\Entity\Helper;
 use App\Entity\Period;
 use App\Entity\Task;
 use DateTime;
+use FontLib\Table\Type\name;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -22,10 +23,13 @@ class PeriodController extends AbstractController
 {
     /**
      * @Route("/periods", name="periods", methods={"GET"})
+     * @param \Swift_Mailer $mailer
+     * @param Request $request
      * @return Response
      */
-    public function index()
+    public function index(\Swift_Mailer $mailer, Request $request)
     {
+
         $error = null;
         if (isset($_GET['error'])) {
             $error = $_GET['error'];
@@ -34,6 +38,8 @@ class PeriodController extends AbstractController
         $periodRepo = $this->getDoctrine()->getRepository(Period::class);
         $periods = $periodRepo->findAll();
         $username = $this->getUser()->getNickname();
+
+
         return $this->render('period/index.html.twig', [
             'username'=>$username, "periods" => $periods, 'error' => $error
         ]);
@@ -41,9 +47,11 @@ class PeriodController extends AbstractController
 
     /**
      * @Route("/create_period", name="createPeriod", methods={"GET"})
+     * @return Response
      */
     public function create()
     {
+
         $errors = '';
         $newPeriodForm = $this->createFormBuilder()
             ->add('clients', EntityType::class, [
@@ -85,11 +93,13 @@ class PeriodController extends AbstractController
     /**
      * @Route("/period/save", name="savePeriod", methods={"GET","POST"})
      * @param Request $request
+     * @param \Swift_Mailer $mailer
      * @return RedirectResponse
      * @throws \Exception
      */
-    public function save(Request $request)
+    public function save(Request $request,\Swift_Mailer $mailer)
     {
+
         $helper = new Helper();
         $em = $this->getDoctrine()->getManager();
 
@@ -118,12 +128,16 @@ class PeriodController extends AbstractController
 
             //dd(empty($tasks));
             if (!empty($tasks)) {
-                dd(empty($tasks));
+               // dd(empty($tasks));
                 $newPeriod->setClient($client);
                 $newPeriod->setStartDate($startDate);
                 $newPeriod->setEndDate($endDate);
                 $em->persist($newPeriod);
                 $em->flush();
+
+
+
+
 
                 foreach ($tasks as $task) {
                     // $updateTask = $taskRepo->find($task->getId());
@@ -131,6 +145,39 @@ class PeriodController extends AbstractController
                     $em->persist($task);
                     $em->flush();
                 }
+
+
+
+                //period info for mail
+                $period = $periodRepo->find($newPeriod->getId());
+                $tasksOfPeriod = $taskRepo->findBy(['period' => $period], ['date' => 'ASC']);
+
+                $totalCost = 0;
+
+                foreach ($tasksOfPeriod as $task) {
+                    $totalCost += $task->getTotalCost();
+                }
+
+                $message = new \Swift_Message('Nieuwe Bevestiging van Arte Tech Pro');
+                $templateParams = [
+                    "name" => "nawang", "tasksOfPeriod" => $tasksOfPeriod, "period" => $period, 'totalCostOfPeriod' => $totalCost
+                ];
+
+                //setup message for email
+                $message
+                    ->setFrom('artetechpro@gmail.com')
+                    ->setTo('n.tendar@gmail.com')
+                    ->setBody(
+                        $this->renderView(
+                        // templates/emails/registration.html.twig
+                            'emails/period.html.twig',
+                            $templateParams
+                        ),
+                        'text/html'
+                    );
+
+                //send mail now
+                $mailer->send($message);
                 return $this->redirectToRoute("periods");
             } else {
                 $error = "Geen nieuwe period: Alle Prestaties zitten al in Period.";
