@@ -309,33 +309,6 @@ class PeriodController extends AbstractController
         return $this->render("period/index.html.twig");
     }
 
-    /**
-     * @Route("/period/confirm/{periodId}", name="changeConfirm" , methods={"GET"})
-     * @param  $periodId
-     * @return RedirectResponse
-     */
-    public function changeConfirm($periodId)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $period = $this->getDoctrine()->getRepository(Period::class)->find($periodId);
-
-
-
-        if ($period->getComplain()) {
-            $em->remove($period->getComplain());
-            $em->flush();
-        }
-
-        dd($period->getComplain());
-
-        $period->setIsConfirm(false);
-
-
-        $em->persist($period);
-        $em->flush();
-        return $this->redirectToRoute('periods');
-    }
-
 
     /**
      * @Route("/period/{period}/delete", name="deletePeriod" , methods={"GET"})
