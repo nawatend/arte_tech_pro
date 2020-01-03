@@ -1,25 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="3536085b-9b7e-4620-868a-e0a508ff002a" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/css/abstracts/_functions.sass" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/css/base/_fonts.sass" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/css/layout/_body.sass" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/css/layout/_grid.sass" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/css/layout/_header.sass" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/css/layout/_nav.sass" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/css/pages/_profile.sass" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Controller/APIController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/APIController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Controller/TaskController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/TaskController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Entity/Helper.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Helper.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/security/login.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/security_test/login.html.twig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/task/create_task.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/task/create_task.html.twig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../docs/arte_tech_pro.sql" beforeDir="false" afterPath="$PROJECT_DIR$/../docs/arte_tech_pro.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../docs/frontend_webapp.xd" beforeDir="false" afterPath="$PROJECT_DIR$/../docs/frontend_webapp.xd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../docs/productiedossier_template.docx" beforeDir="false" afterPath="$PROJECT_DIR$/../docs/productiedossier_template.docx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../docs/timsheet.xlsx" beforeDir="false" afterPath="$PROJECT_DIR$/../docs/timsheet.xlsx" afterDir="false" />
-    </list>
+    <list default="true" id="3536085b-9b7e-4620-868a-e0a508ff002a" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -224,7 +206,7 @@
       <workItem from="1577747137653" duration="11168000" />
       <workItem from="1577805880426" duration="26643000" />
       <workItem from="1577998885655" duration="5557000" />
-      <workItem from="1578044364439" duration="1770000" />
+      <workItem from="1578044364439" duration="1930000" />
     </task>
     <servers />
   </component>
