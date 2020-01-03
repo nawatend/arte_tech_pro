@@ -33,18 +33,14 @@ class Helper
 
     public function calculateTaskTotalCost($hourlyRate, $totalHours, $transportRate, $transportKM){
 
-
         $xAbleHours = date('h',strtotime($totalHours));
         $xAbleMinutes = date('i',strtotime($totalHours))/60;
-
 
         return $hourlyRate * ($xAbleHours + $xAbleMinutes) + ($transportRate * $transportKM);
     }
 
     public function getDateFromTimestamp($timestamp){
-
         return date("Y-m-d", $timestamp/1000);
-
     }
 
     public function getTimeFromTimestamp($timestamp){
@@ -55,38 +51,8 @@ class Helper
         return $date->setTimestamp(( 3600000 + $timestamp)/1000);
     }
 
-
-    /**
-     * @param $tasksOfPeriod
-     * @param $period
-     * @param $totalCost
-     */
-    public function sendMail($tasksOfPeriod,$period,$totalCost){
-
-
-
-
-        $message = new \Swift_Message('Hello Email');
-        $templateParams = [
-            "name" => "nawang", "tasksOfPeriod" => $tasksOfPeriod, "period" => $period, 'totalCostOfPeriod' => $totalCost
-        ];
-
-        //setup message for email
-        $message
-            ->setFrom('artetechpro@gmail.com')
-            ->setTo('n.tendar@gmail.com')
-            ->setBody(
-                $this->renderView(
-                // templates/emails/registration.html.twig
-                    'emails/period.html.twig',
-                    $templateParams
-                ),
-                'text/html'
-            );
-
-
-
-        //send mail now
-        $mailer->send($message);
-    }
+   public function isWeekend($date){
+       $weekDay = date('w', strtotime($date));
+       return ($weekDay == 0 || $weekDay == 6);
+   }
 }

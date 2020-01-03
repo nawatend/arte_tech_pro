@@ -58,13 +58,9 @@ class APIController extends AbstractController
         if ($request->isMethod('POST')) {
             $postData = json_decode($request->getContent());
             $user = $userManager->findOneBy(['email' => $postData->email]);
-
-
             $tasks = $taskManager->findBy(['user' => $user->getId()], ["date" => "DESC"]);
-
             $tasks = $serializer->normalize($tasks, 'json', ['groups' => 'taskInfo']);
 
-            //dd($tasks);
             return $this->json($tasks);
         }
     }
@@ -136,7 +132,7 @@ class APIController extends AbstractController
                             break;
                         }
                     }
-                    if($isClientUnique){
+                    if ($isClientUnique) {
                         array_push($userClients, $tasks[$i]["client"]);
                     }
                 }
@@ -236,10 +232,8 @@ class APIController extends AbstractController
      * @return JsonResponse
      * @throws \Exception
      */
-    public
-    function saveTask(Request $request)
+    public function saveTask(Request $request)
     {
-
         $em = $this->getDoctrine()->getManager();
         $clientRepo = $this->getDoctrine()->getRepository(Client::class);
         $userRepo = $this->getDoctrine()->getRepository(User::class);
@@ -249,22 +243,15 @@ class APIController extends AbstractController
         if ($request->isMethod("POST")) {
 
             $postData = json_decode($request->getContent());
-            //client id
-            //user id
-            //date
-            //start time - timestamp
-            //end time - timestamp
-            //description
-            //Used
-            //km
 
             $client = $clientRepo->find($postData->clientId);
             $employeeUser = $userRepo->find($postData->workerId);
-            $dateFormatted = $helper->convertToGoodDateForDB($postData->date);
-            // dd($helper->getTimeFromTimestamp($postData->startTime));
 
+            //get DateTime from timeStamp
             $startTime = $helper->getTimeFromTimestamp($postData->startTime);
             $endTime = $helper->getTimeFromTimestamp($postData->endTime);
+
+            //fill in new data for new task
             $newTask->setClient($client);
             $newTask->setUser($employeeUser);
             $newTask->setDate(new DateTime($helper->getDateFromTimestamp($postData->date)));
@@ -273,15 +260,14 @@ class APIController extends AbstractController
             $newTask->setEndTime($endTime);
             $newTask->setTotalHours($helper->getHoursDifference($startTime, $endTime));
 
-            $newTask->setTotalCost($helper->calculateTaskTotalCost($client->getHourlyRate(), $helper->getHoursDifference($startTime, $endTime), $client->getTransportCost(), $postData->km));
+            $newTask->setTotalCost($helper->calculateTaskTotalCost($client->getHourlyRate()
+                , $helper->getHoursDifference($startTime, $endTime), $client->getTransportCost(), $postData->km));
             $newTask->setDescription($postData->description);
             $newTask->setUsed($postData->used);
             $newTask->setTransportKM($postData->km);
 
-
             $em->persist($newTask);
             $em->flush();
-
         }
         return $this->json("Saved");
     }

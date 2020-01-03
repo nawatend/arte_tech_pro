@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:8889
--- Generation Time: Dec 27, 2019 at 09:49 PM
+-- Generation Time: Jan 02, 2020 at 09:25 AM
 -- Server version: 5.7.24
 -- PHP Version: 7.3.7
 
@@ -44,8 +44,7 @@ CREATE TABLE `client` (
 INSERT INTO `client` (`id`, `user_id`, `company_name`, `hourly_rate`, `transport_cost`, `telephone`) VALUES
 (2, 15, 'Nawang Production', 15, 1.5, '0488 010 685'),
 (4, 21, 'In The Pocket', 22, 0.55555, '0488010685'),
-(5, 27, 'Very Nice Company', 10, 2, '0114 5494 '),
-(6, 29, 'CC', 0, 0, '00');
+(5, 27, 'Very Nice Company', 10, 2, '0114 5494 ');
 
 -- --------------------------------------------------------
 
@@ -58,6 +57,14 @@ CREATE TABLE `complain` (
   `period_id` int(11) NOT NULL,
   `message` longtext COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `complain`
+--
+
+INSERT INTO `complain` (`id`, `period_id`, `message`) VALUES
+(1, 17, 'Very Done Job good'),
+(2, 1, '10 confirmed kill: excellent job');
 
 -- --------------------------------------------------------
 
@@ -77,9 +84,10 @@ CREATE TABLE `freelancer_rate` (
 --
 
 INSERT INTO `freelancer_rate` (`id`, `user_id`, `hour_rate`, `transport_cost`) VALUES
-(1, 25, 12.4, 2.5),
+(1, 25, 40, 3),
 (2, 26, 13, 3),
-(3, 31, 10, 1);
+(3, 31, 10, 1),
+(4, 32, 2.2, 2.2);
 
 -- --------------------------------------------------------
 
@@ -97,16 +105,6 @@ CREATE TABLE `migration_versions` (
 --
 
 INSERT INTO `migration_versions` (`version`, `executed_at`) VALUES
-('20191205001227', '2019-12-05 00:12:31'),
-('20191206235303', '2019-12-06 23:53:25'),
-('20191207151822', '2019-12-07 15:18:28'),
-('20191207183917', '2019-12-07 18:39:23'),
-('20191208205532', '2019-12-08 20:56:15'),
-('20191210224240', '2019-12-10 22:42:55'),
-('20191213131738', '2019-12-13 13:17:45'),
-('20191213134326', '2019-12-13 13:43:36'),
-('20191213134415', '2019-12-13 13:44:20'),
-('20191213140247', '2019-12-13 14:02:53'),
 ('20191214140627', '2019-12-17 10:40:25'),
 ('20191218105434', '2019-12-18 10:55:04'),
 ('20191225223858', '2019-12-25 22:39:37'),
@@ -136,7 +134,8 @@ INSERT INTO `period` (`id`, `client_id`, `start_date`, `end_date`, `is_confirm`)
 (1, 2, '2019-12-01', '2019-12-12', 1),
 (8, 2, '2019-12-11', '2019-12-20', 1),
 (16, 4, '2019-12-23', '2019-12-31', 0),
-(17, 2, '2019-12-23', '2019-12-30', 0);
+(17, 2, '2019-12-23', '2019-12-30', 1),
+(22, 4, '2020-01-12', '2020-01-29', 0);
 
 -- --------------------------------------------------------
 
@@ -185,15 +184,26 @@ CREATE TABLE `task` (
 --
 
 INSERT INTO `task` (`id`, `user_id`, `client_id`, `date`, `start_time`, `end_time`, `description`, `used`, `transport_km`, `period_id`, `total_hours`, `total_cost`) VALUES
-(1, 20, 2, '2019-12-10', '18:00:00', '22:00:00', 'Task Edit Updated Check------- \r\nTask Edit Updated Check------- \r\n', 'Brain.exe Brain.exe Brain.exe Brain.exe Brain.exe Brain.exe Brain.exe Brain.exe Brain.exe Brain.exe Brain.exe Brain.exe Brain.exe Brain.exe Brain.exe Brain.exe ', 50.45, 1, '04:00', 135.675),
+(1, 20, 2, '2018-08-15', '18:00:00', '22:00:00', 'Task Edit Updated Check------- \r\nTask Edit Updated Check------- \r\n', 'Brain.exe Brain.exe Brain.exe Brain.exe Brain.exe Brain.exe Brain.exe Brain.exe Brain.exe Brain.exe Brain.exe Brain.exe Brain.exe Brain.exe Brain.exe Brain.exe ', 50.45, 1, '04:00', 135.675),
 (3, 20, 4, '2019-12-17', '14:00:00', '20:00:00', 'Updated Hahaa', 'ttttttttttttttttttttttttttttttt', 999, 8, '06:00', 686.99445),
-(4, 20, 2, '2019-12-19', '04:44:00', '08:00:00', 'Router unplugged and plugged in again. FIXED', 'Hand', 0.1, 8, '03:16', 49.15),
 (5, 25, 2, '2019-12-27', '03:45:00', '16:55:00', 'laaaaaaaaaaaaa', 'sddddd', 999, 17, '13:10', 1516),
 (6, 25, 4, '2019-12-24', '10:00:00', '19:00:00', 'Hello Chooooo', 'Brain.exe', 999, 16, '09:00', 752.99445),
 (7, 25, 2, '2019-12-25', '07:01:00', '16:01:00', 'Desctsdklndslkfnsd ', 'sadsa dsa d', 223, 17, '09:00', 469.5),
 (8, 25, 2, '2019-12-28', '07:00:00', '16:00:00', 'zxcxzcxzcxzccxvcrewr', 'sdfdsf', 324, 17, '09:00', 621),
 (9, 25, 4, '2019-12-27', '09:00:00', '17:00:00', 'Fixed tv', 'Brain', 2, 16, '08:00', 177.1111),
-(10, 25, 5, '2019-12-31', '09:06:00', '16:54:00', 'Just Walking', 'Dead', 5, NULL, '07:48', 88);
+(10, 25, 5, '2019-12-31', '09:06:00', '16:54:00', 'Just Walking', 'Dead', 5, NULL, '07:48', 88),
+(11, 25, 4, '2019-12-28', '09:30:00', '17:30:00', 'description is good', 'used is here too', 5, NULL, '08:00', 178.77775),
+(12, 25, 4, '2019-12-29', '16:30:00', '20:00:00', 'sadsad', 'asdsadsad', 5, NULL, '03:30', 79.77775),
+(13, 25, 4, '2019-12-29', '18:45:00', '23:30:00', 'sadsadsadzxczxcxz', 'cccccccccccccc', 3, NULL, '04:45', 106.16665),
+(14, 25, 4, '2018-07-25', '05:00:00', '11:15:00', 'Notification test', 'React Notification', 2, NULL, '06:15', 138.6111),
+(15, 25, 4, '2019-12-31', '11:45:00', '15:00:00', 'Redirect after post', 'with router', 11, NULL, '03:15', 77.61105),
+(16, 25, 4, '2019-12-29', '07:15:00', '14:30:00', 'sadsadsad', 'sadsadsadasd', 0, NULL, '07:15', 159.5),
+(17, 25, 4, '2019-12-30', '12:15:00', '16:00:00', 'dsfdsfds', 'dsfdsfdsf', 33, NULL, '03:45', 100.83315),
+(18, 25, 4, '2018-07-25', '09:30:00', '15:30:00', '111111111111111101fds s', 'vcxvcxv', 0, NULL, '06:00', 132),
+(19, 25, 2, '2019-12-30', '10:15:00', '17:30:00', 'Goood selection of clients', 'just hands and mind', 55, NULL, '07:15', 191.25),
+(20, 31, 4, '2019-12-28', '11:00:00', '17:00:00', 'fitness', 'machine', 1, NULL, '06:00', 132.55555),
+(21, 25, 5, '2020-01-14', '05:00:00', '15:30:00', 'Think about the future', 'brain', 5, NULL, '10:30', 115),
+(22, 25, 4, '2020-01-13', '05:15:00', '16:15:00', 'Email sending test time', 'swift', 5, 22, '11:00', 244.77775);
 
 -- --------------------------------------------------------
 
@@ -220,12 +230,13 @@ INSERT INTO `user` (`id`, `email`, `roles`, `password`, `api_token`, `nickname`)
 (21, 'itp@gmail.com', '[\"ROLE_CLIENT\"]', '$argon2id$v=19$m=65536,t=4,p=1$L0xjOXN5Z3ZybTVsaHdBSg$bUiK3R+MFXuyAIWBinOuFrDqPUMCWkZvcEompt7xPm0', NULL, 'Laura'),
 (22, 'nn@gmail.com', '[\"ROLE_CLIENT\"]', '$argon2id$v=19$m=65536,t=4,p=1$cE1LU0JOaG9YQS9KR1p2Ug$MUE6gLPfIxOj9QAjGATIK0u856j/8H5B4nv/b9Qtj1Q', NULL, 'Na Naaa'),
 (24, 'a@gmail.com', '[\"ROLE_ADMIN\"]', '$argon2id$v=19$m=65536,t=4,p=1$UDFGTWhkanZCRzN3V283Tg$M/IiiLEDe1gqOdop/gJIj3c+n+SpxZwKpNjHH/ZjKLo', NULL, 'Wicked Man'),
-(25, 'freelancer@gmail.com', '[\"ROLE_FREELANCER\"]', '$argon2id$v=19$m=65536,t=4,p=1$Zlp6U3pWSjN3eDBlNHFrUg$UG/uTWHy2ll3zRqDOLf/zG/60JgkUdZOBfkvtLLlFzQ', NULL, 'Nawang'),
+(25, 'freelancer@gmail.com', '[\"ROLE_FREELANCER\"]', '$argon2id$v=19$m=65536,t=4,p=1$cE1nSFU0eEFiQnRzWjNOZg$IKOszsdpp/OqcrxwmTWM1Z8NON7bn4UyvAnevHCawdY', NULL, 'Nawang'),
 (26, 'freelaa@gmail.com', '[\"ROLE_FREELANCER\"]', '$argon2id$v=19$m=65536,t=4,p=1$R2RTRkFRd3JCaDBkUThwNA$OmLamHsbHBDMZTiHkVuoSA/ME/xXuKu30mNbn+je7KU', NULL, 'John De Freelance'),
 (27, 'c@gmail.com', '[\"ROLE_CLIENT\"]', '$argon2id$v=19$m=65536,t=4,p=1$aG5Qc2VuSVFPWVNaT015aA$vJ81oMYCm7AVmPe65vXNwltOPMpHrmSJtxVktuY83W0', NULL, 'Nicola Tesla'),
-(29, 'cc@gmail.com', '[\"ROLE_CLIENT\"]', '$argon2id$v=19$m=65536,t=4,p=1$NU8wNWRVai9JSEJSYy9xUg$qAsP3fd/ycCXyxZvonNCVfQ9+7nm9Ci9DpKvnGtTAQs', NULL, 'CoCo'),
 (30, 'e@gmail.com', '[\"ROLE_EMPLOYEE\"]', '$argon2id$v=19$m=65536,t=4,p=1$cm91SVhEeWsuUjVwMEVYTQ$UMyduanEsu7nxkJpO3N3Ala1of6EFelcgMSsPQNNM+E', NULL, 'John Wick'),
-(31, 'nf@gmail.com', '[\"ROLE_FREELANCER\"]', '$argon2id$v=19$m=65536,t=4,p=1$MTdvR2ZJdmVRZjg3anl2Yg$MPtDU6OGjWlcGkQ9NWqsTk2i5AI/yZ9aF3uCEOPR8Sc', NULL, NULL);
+(31, 'nf@gmail.com', '[\"ROLE_FREELANCER\"]', '$argon2id$v=19$m=65536,t=4,p=1$MTdvR2ZJdmVRZjg3anl2Yg$MPtDU6OGjWlcGkQ9NWqsTk2i5AI/yZ9aF3uCEOPR8Sc', NULL, 'Sun Shine'),
+(32, 'o@gmail.com', '[\"ROLE_FREELANCER\"]', '$argon2id$v=19$m=65536,t=4,p=1$SWFhUkx6a0tJODRzb0NoSg$yyeG/uFow9j28U0a46i/JcbEc6gLhO46Zzh5Qsv0Q4Q', NULL, 'Oooooooooo'),
+(34, 'yyyyn@gmail.com', '[\"ROLE_EMPLOYEE\"]', '$argon2id$v=19$m=65536,t=4,p=1$TTVxQWY2aEIvazJab3lSRw$sR4WW3j/0q7VC43iUVCwHxiHXfHGQN+Z/yypABGfnUo', NULL, 'Lapelllee333');
 
 --
 -- Indexes for dumped tables
@@ -302,19 +313,19 @@ ALTER TABLE `client`
 -- AUTO_INCREMENT for table `complain`
 --
 ALTER TABLE `complain`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `freelancer_rate`
 --
 ALTER TABLE `freelancer_rate`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `period`
 --
 ALTER TABLE `period`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `salary_type`
@@ -326,13 +337,13 @@ ALTER TABLE `salary_type`
 -- AUTO_INCREMENT for table `task`
 --
 ALTER TABLE `task`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- Constraints for dumped tables

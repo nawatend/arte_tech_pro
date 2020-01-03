@@ -11,6 +11,12 @@
                 {% if form.taskId is defined %}
                     {{ form_row(form.taskId) }}
                 {% endif %}
+
+                {% if errors is defined and errors is not null %}
+                <div class="form-group col-md-10">
+                    <div class="alert alert-danger" role="alert">{{ errors }}</div>
+                </div>
+                {% endif %}
                 <div class="form-group col-md-5">
                     {{ form_label(form.clients,'Klant') }}
                     {{ form_widget(form.clients,{'attr':{'class': 'form-control','id':'inputClient'}}) }}

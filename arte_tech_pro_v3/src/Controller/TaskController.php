@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\FreelancerRate;
 use DateTime;
 use App\Entity\Client;
 use App\Entity\Task;
@@ -46,7 +47,7 @@ class TaskController extends AbstractController
         $username = $this->getUser()->getNickname();
         //dd($username);
         return $this->render('task/index.html.twig', [
-            'controller_name' => 'TaskController', "tasks" => $tasks,'username'=>$username
+            'controller_name' => 'TaskController', "tasks" => $tasks, 'username' => $username
         ]);
     }
 
@@ -55,9 +56,11 @@ class TaskController extends AbstractController
      */
     public function create()
     {
-        $task = new Task();
 
-        $errors = '';
+        $errors = null;
+        if (isset($_GET['error'])) {
+            $errors = $_GET['error'];
+        }
         $newTaskForm = $this->createFormBuilder()
             ->add("clients", EntityType::class, [
                 'class' => Client::class,
@@ -73,7 +76,11 @@ class TaskController extends AbstractController
             ->add('users', EntityType::class, [
                 'class' => User::class,
                 'choice_label' => function (User $user) {
-                    return sprintf('%d. %s', $user->getId(), $user->getEmail());
+                    if (in_array("ROLE_FREELANCER", $user->getRoles())) {
+                        return sprintf('%d. %s', $user->getId(), $user->getNickname() . " - Freelancer");
+                    } else {
+                        return sprintf('%d. %s', $user->getId(), $user->getNickname());
+                    }
                 },
                 'choice_value' => function (User $user = null) {
                     return $user ? $user->getId() : '';
@@ -117,7 +124,7 @@ class TaskController extends AbstractController
             ->getForm();
 
         $username = $this->getUser()->getNickname();
-        return $this->render("task/create_task.html.twig", ['form' => $newTaskForm->createView(), 'errors' => $errors,'username'=>$username]);
+        return $this->render("task/create_task.html.twig", ['form' => $newTaskForm->createView(), 'errors' => $errors, 'username' => $username]);
     }
 
     /**
@@ -129,9 +136,11 @@ class TaskController extends AbstractController
     {
 
 
+        //TODO: check freelancer rate
         $helper = new Helper();
         $clientRepo = $this->getDoctrine()->getRepository(Client::class);
         $userRepo = $this->getDoctrine()->getRepository(User::class);
+        $rateRepo = $this->getDoctrine()->getRepository(FreelancerRate::class);
         $newTask = new Task();
 
 
@@ -141,24 +150,46 @@ class TaskController extends AbstractController
             $taskData = $request->request->get("form");
 
             $client = $clientRepo->find($taskData['clients']);
-            $employeeUser = $userRepo->find($taskData['users']);
+            $workerUser = $userRepo->find($taskData['users']);
             $dateFormatted = $helper->convertToGoodDateForDB($taskData['date']);
 
             //dd($taskData['endTime']);
 
             $newTask->setClient($client);
-            $newTask->setUser($employeeUser);
+            $newTask->setUser($workerUser);
             $newTask->setDate(new DateTime($dateFormatted));
             $newTask->setStartTime(new DateTime($taskData['startTime']));
             $newTask->setEndTime(new DateTime($taskData['endTime']));
-            $newTask->setTotalHours($helper->getHoursDifference(new DateTime($taskData['startTime']),new DateTime($taskData['endTime'])));
+            $newTask->setTotalHours($helper->getHoursDifference(new DateTime($taskData['startTime']), new DateTime($taskData['endTime'])));
 
-            $newTask->setTotalCost($helper->calculateTaskTotalCost($client->getHourlyRate(),$helper->getHoursDifference(new DateTime($taskData['startTime']),new DateTime($taskData['endTime'])),$client->getTransportCost(),$taskData['km']));
+            $newTask->setTotalCost($helper->calculateTaskTotalCost($client->getHourlyRate(), $helper->getHoursDifference(new DateTime($taskData['startTime']), new DateTime($taskData['endTime'])), $client->getTransportCost(), $taskData['km']));
             $newTask->setDescription($taskData['description']);
             $newTask->setUsed($taskData['used']);
             $newTask->setTransportKM($taskData['km']);
-            $em->persist($newTask);
-            $em->flush();
+
+            if (in_array("ROLE_FREELANCER", $workerUser->getRoles())) {
+                //check rate of freelancer
+
+                $freelancerRate = $rateRepo->findOneBy(["user" => $workerUser->getId()]);
+              // dd($freelancerRate->getHourRate());
+
+                //10% goes to Arte Tech Company
+                if ($freelancerRate->getHourRate() <= ($client->getHourlyRate() * 0.9)) {
+                    $em->persist($newTask);
+                    $em->flush();
+                } else {
+                    //return $this->redirectToRoute("tasks");
+                    $error = "Freelancer heeft hogere uurtarief dan klant";
+                    return $this->redirect($this->generateUrl('createTask', array('error' => $error)), 301);
+                }
+
+
+            } else {
+                $em->persist($newTask);
+                $em->flush();
+            }
+
+
             return $this->redirectToRoute("tasks");
         }
         return $this->redirectToRoute("tasks");
@@ -247,7 +278,7 @@ class TaskController extends AbstractController
             ->getForm();
 
         $username = $this->getUser()->getNickname();
-        return $this->render("task/create_task.html.twig", ['form' => $updateTaskForm->createView(), 'task' => $task, 'errors' => $errors,'username'=>$username,]);
+        return $this->render("task/create_task.html.twig", ['form' => $updateTaskForm->createView(), 'task' => $task, 'errors' => $errors, 'username' => $username,]);
     }
 
     /**
@@ -275,8 +306,8 @@ class TaskController extends AbstractController
             $oldTask->setDate(new DateTime($dateFormatted));
             $oldTask->setStartTime(new DateTime($taskData['startTime']));
             $oldTask->setEndTime(new DateTime($taskData['endTime']));
-            $oldTask->setTotalHours($helper->getHoursDifference(new DateTime($taskData['startTime']),new DateTime($taskData['endTime'])));
-            $oldTask->setTotalCost($helper->calculateTaskTotalCost($client->getHourlyRate(),$helper->getHoursDifference(new DateTime($taskData['startTime']),new DateTime($taskData['endTime'])),$client->getTransportCost(),$taskData['km']));
+            $oldTask->setTotalHours($helper->getHoursDifference(new DateTime($taskData['startTime']), new DateTime($taskData['endTime'])));
+            $oldTask->setTotalCost($helper->calculateTaskTotalCost($client->getHourlyRate(), $helper->getHoursDifference(new DateTime($taskData['startTime']), new DateTime($taskData['endTime'])), $client->getTransportCost(), $taskData['km']));
             $oldTask->setDescription($taskData['description']);
             $oldTask->setUsed($taskData['used']);
             $oldTask->setTransportKM($taskData['km']);

@@ -72,6 +72,8 @@ let AddTaskPage = () => {
             })
     }
 
+
+    
     useEffect(() => {
         setToken(localStorage.getItem('ATP_token'))
 
