@@ -7,6 +7,7 @@ use App\Entity\Complain;
 use App\Entity\Helper;
 use App\Entity\Period;
 use App\Entity\Task;
+use App\Entity\User;
 use DateTime;
 use FontLib\Table\Type\name;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -101,17 +102,24 @@ class PeriodController extends AbstractController
     {
 
         $helper = new Helper();
+
         $em = $this->getDoctrine()->getManager();
 
         $periodRepo = $this->getDoctrine()->getRepository(Period::class);
         $clientRepo = $this->getDoctrine()->getRepository(Client::class);
         $taskRepo = $this->getDoctrine()->getRepository(Task::class);
+
+
         $newPeriod = new Period();
         $error = "";
         if ($request->isMethod('POST')) {
 
             $periodData = $request->request->get('form');
             $client = $clientRepo->find($periodData['clients']);
+
+
+            $clientUser = $this->getDoctrine()->getRepository(User::class)->findOneBy(["id" => $client->getUser()->getId()]);
+
 
             //set date good and get all task between dates
             $startDate = new DateTime($helper->convertToGoodDateForDB($periodData['startDate']));
@@ -159,13 +167,13 @@ class PeriodController extends AbstractController
                     "name" => "nawang", "tasksOfPeriod" => $tasksOfPeriod, "period" => $period, 'totalCostOfPeriod' => $totalCost
                 ];
 
+
                 //setup message for email
                 $message
                     ->setFrom('artetechpro@gmail.com')
-                    ->setTo('n.tendar@gmail.com')
+                    ->setTo($clientUser->getEmail())
                     ->setBody(
                         $this->renderView(
-                        // templates/emails/registration.html.twig
                             'emails/period.html.twig',
                             $templateParams
                         ),
@@ -179,7 +187,6 @@ class PeriodController extends AbstractController
                 $error = "Geen nieuwe period: Alle Prestaties zitten al in Period.";
             }
         }
-        //return $this->redirectToRoute("periods",["error" =>$error]);
 
         $username = $this->getUser()->getNickname();
         return $this->redirect($this->generateUrl('periods', array('error' => $error)), 301);

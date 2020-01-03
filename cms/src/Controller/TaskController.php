@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\FreelancerRate;
+use App\Entity\SalaryType;
 use DateTime;
 use App\Entity\Client;
 use App\Entity\Task;
@@ -75,17 +76,22 @@ class TaskController extends AbstractController
             ])
             ->add('users', EntityType::class, [
                 'class' => User::class,
+                'placeholder' => 'Kies een werknemer',
                 'choice_label' => function (User $user) {
                     if (in_array("ROLE_FREELANCER", $user->getRoles())) {
                         return sprintf('%d. %s', $user->getId(), $user->getNickname() . " - Freelancer");
-                    } else {
+                    } elseif (in_array("ROLE_EMPLOYEE", $user->getRoles())) {
                         return sprintf('%d. %s', $user->getId(), $user->getNickname());
                     }
-                },
+                }, 'required' => true,
                 'choice_value' => function (User $user = null) {
-                    return $user ? $user->getId() : '';
+                    if ($user) {
+                        if (in_array("ROLE_FREELANCER", $user->getRoles()) || in_array("ROLE_EMPLOYEE", $user->getRoles())) {
+                            return $user->getId();
+                        }
+                    }
                 },
-                'placeholder' => 'Kies een werknemer'
+
             ])
             ->add('date', DateType::class, [
                 'widget' => 'single_text',
@@ -136,33 +142,44 @@ class TaskController extends AbstractController
     {
 
 
-        //TODO: check freelancer rate
         $helper = new Helper();
         $clientRepo = $this->getDoctrine()->getRepository(Client::class);
         $userRepo = $this->getDoctrine()->getRepository(User::class);
         $rateRepo = $this->getDoctrine()->getRepository(FreelancerRate::class);
+        $salaryTypeRepo = $this->getDoctrine()->getRepository(SalaryType::class);
         $newTask = new Task();
-
 
         if ($request->isMethod('POST')) {
             $em = $this->getDoctrine()->getManager();
-
             $taskData = $request->request->get("form");
 
             $client = $clientRepo->find($taskData['clients']);
             $workerUser = $userRepo->find($taskData['users']);
             $dateFormatted = $helper->convertToGoodDateForDB($taskData['date']);
 
+
+            $salaryTypeValue = $salaryTypeRepo->findOneBy(['typeName' => $helper->getWeekType($dateFormatted)])->getBonusRate();
+
+
             //dd($taskData['endTime']);
 
             $newTask->setClient($client);
             $newTask->setUser($workerUser);
             $newTask->setDate(new DateTime($dateFormatted));
+
+            // dd($dateFormatted);
+
+
             $newTask->setStartTime(new DateTime($taskData['startTime']));
             $newTask->setEndTime(new DateTime($taskData['endTime']));
-            $newTask->setTotalHours($helper->getHoursDifference(new DateTime($taskData['startTime']), new DateTime($taskData['endTime'])));
+            $newTask->setTotalHours($helper->getHoursDifference(new DateTime($taskData['startTime'])
+                , new DateTime($taskData['endTime'])));
 
-            $newTask->setTotalCost($helper->calculateTaskTotalCost($client->getHourlyRate(), $helper->getHoursDifference(new DateTime($taskData['startTime']), new DateTime($taskData['endTime'])), $client->getTransportCost(), $taskData['km']));
+            $newTask->setTotalCost($helper->calculateTaskTotalCost($client->getHourlyRate()
+                , $helper->getHoursDifference(new DateTime($taskData['startTime'])
+                    , new DateTime($taskData['endTime'])), $client->getTransportCost()
+                , $taskData['km'], $helper->getWeekType($dateFormatted), $salaryTypeValue));
+
             $newTask->setDescription($taskData['description']);
             $newTask->setUsed($taskData['used']);
             $newTask->setTransportKM($taskData['km']);
@@ -171,10 +188,21 @@ class TaskController extends AbstractController
                 //check rate of freelancer
 
                 $freelancerRate = $rateRepo->findOneBy(["user" => $workerUser->getId()]);
-              // dd($freelancerRate->getHourRate());
+                // dd($freelancerRate->getHourRate());
 
+                //TODO: check freelancer rate, accept 90% of client rate
                 //10% goes to Arte Tech Company
                 if ($freelancerRate->getHourRate() <= ($client->getHourlyRate() * 0.9)) {
+
+                    // dd($freelancerRate->getTransportCost());
+
+                    //set  with freelancers rate
+                    $newTask->setTotalCost($helper->calculateTaskTotalCost($freelancerRate->getHourRate()
+                        , $helper->getHoursDifference(new DateTime($taskData['startTime'])
+                            , new DateTime($taskData['endTime'])), $freelancerRate->getTransportCost()
+                        , $taskData['km'], $helper->getWeekType($dateFormatted), $salaryTypeValue));
+
+
                     $em->persist($newTask);
                     $em->flush();
                 } else {
@@ -224,10 +252,18 @@ class TaskController extends AbstractController
             ->add('users', EntityType::class, [
                 'class' => User::class,
                 'choice_label' => function (User $user) {
-                    return sprintf('%d. %s', $user->getId(), $user->getEmail());
+                    if (in_array("ROLE_FREELANCER", $user->getRoles())) {
+                        return sprintf('%d. %s', $user->getId(), $user->getNickname() . " - Freelancer");
+                    } elseif (in_array("ROLE_EMPLOYEE", $user->getRoles())) {
+                        return sprintf('%d. %s', $user->getId(), $user->getNickname());
+                    }
                 },
                 'choice_value' => function (User $user = null) {
-                    return $user ? $user->getId() : '';
+                    if ($user) {
+                        if (in_array("ROLE_FREELANCER", $user->getRoles()) || in_array("ROLE_EMPLOYEE", $user->getRoles())) {
+                            return $user->getId();
+                        }
+                    }
                 },
                 'placeholder' => 'Kies een werknemer',
                 'data' => $task->getUser(),
@@ -283,6 +319,9 @@ class TaskController extends AbstractController
 
     /**
      * @Route("/update_task", name="updateTask", methods={"GET","POST"})
+     * @param Request $request
+     * @return RedirectResponse
+     * @throws \Exception
      */
     public function update(Request $request)
     {
@@ -290,7 +329,11 @@ class TaskController extends AbstractController
         $helper = new Helper();
         $clientManager = $this->getDoctrine()->getRepository(Client::class);
         $userManager = $this->getDoctrine()->getRepository(User::class);
+        $rateRepo = $this->getDoctrine()->getRepository(FreelancerRate::class);
         $taskManager = $this->getDoctrine()->getRepository(Task::class);
+        $salaryTypeRepo = $this->getDoctrine()->getRepository(SalaryType::class);
+
+
         $oldTask = $taskManager->find($request->request->get('form')['taskId']);
 
         if ($request->isMethod('POST')) {
@@ -298,21 +341,56 @@ class TaskController extends AbstractController
 
             $taskData = $request->request->get("form");
             $client = $clientManager->find($taskData['clients']);
-            $employeeUser = $userManager->find($taskData['users']);
+            $workerUser = $userManager->find($taskData['users']);
             $dateFormatted = $helper->convertToGoodDateForDB($taskData['date']);
 
+            $salaryTypeValue = $salaryTypeRepo->findOneBy(['typeName' => $helper->getWeekType($dateFormatted)])->getBonusRate();
+
             $oldTask->setClient($client);
-            $oldTask->setUser($employeeUser);
+            $oldTask->setUser($workerUser);
             $oldTask->setDate(new DateTime($dateFormatted));
             $oldTask->setStartTime(new DateTime($taskData['startTime']));
             $oldTask->setEndTime(new DateTime($taskData['endTime']));
             $oldTask->setTotalHours($helper->getHoursDifference(new DateTime($taskData['startTime']), new DateTime($taskData['endTime'])));
-            $oldTask->setTotalCost($helper->calculateTaskTotalCost($client->getHourlyRate(), $helper->getHoursDifference(new DateTime($taskData['startTime']), new DateTime($taskData['endTime'])), $client->getTransportCost(), $taskData['km']));
+            $oldTask->setTotalCost($helper->calculateTaskTotalCost($client->getHourlyRate()
+                , $helper->getHoursDifference(new DateTime($taskData['startTime'])
+                    , new DateTime($taskData['endTime'])), $client->getTransportCost(), $taskData['km'], $helper->getWeekType($dateFormatted)
+                , $salaryTypeValue));
             $oldTask->setDescription($taskData['description']);
             $oldTask->setUsed($taskData['used']);
             $oldTask->setTransportKM($taskData['km']);
-            $em->persist($oldTask);
-            $em->flush();
+
+
+            if (in_array("ROLE_FREELANCER", $workerUser->getRoles())) {
+                //check rate of freelancer
+                $freelancerRate = $rateRepo->findOneBy(["user" => $workerUser->getId()]);
+                // dd($freelancerRate->getHourRate());
+
+                //TODO: check freelancer rate, accept 90% of client rate
+                //10% goes to Arte Tech Company
+                if ($freelancerRate->getHourRate() <= ($client->getHourlyRate() * 0.9)) {
+
+                    $oldTask->setTotalCost($helper->calculateTaskTotalCost($freelancerRate->getHourRate()
+                        , $helper->getHoursDifference(new DateTime($taskData['startTime'])
+                            , new DateTime($taskData['endTime'])), $freelancerRate->getTransportCost()
+                        , $taskData['km'], $helper->getWeekType($dateFormatted), $salaryTypeValue));
+
+                   // dd($oldTask);
+
+                    $em->persist($oldTask);
+                    $em->flush();
+                } else {
+                    //return $this->redirectToRoute("tasks");
+                    $error = "Freelancer heeft hogere uurtarief dan klant";
+                    return $this->redirect($this->generateUrl('createTask', array('error' => $error)), 301);
+                }
+
+            } else {
+                $em->persist($oldTask);
+                $em->flush();
+            }
+
+
             return $this->redirectToRoute("tasks");
         }
         return $this->redirectToRoute("tasks");

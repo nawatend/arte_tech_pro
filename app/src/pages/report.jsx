@@ -50,11 +50,11 @@ let ReportPage = () => {
         setIsDataLoading(true)
         //if date and client changed
         if (startDate === 0 && clientSelected.value === 0) {
-            getMonthHours().then((value) => {
+            getMonthHours("ALL").then((value) => {
                 setTotalHours(value)
 
             }).then(() => {
-                getMonthIncome().then((value) => {
+                getMonthIncome("ALL").then((value) => {
                     setTotalIncome(value)
                     setIsDataLoading(false)
                 })
@@ -107,11 +107,11 @@ let ReportPage = () => {
         if (loading) {
             getClients()
                 .then(() => {
-                    getMonthHours().then((value) => {
+                    getMonthHours("ALL").then((value) => {
                         setTotalHours(value)
 
                     }).then(() => {
-                        getMonthIncome().then((value) => {
+                        getMonthIncome("ALL").then((value) => {
                             setTotalIncome(value)
                             setLoading(false)
                         })

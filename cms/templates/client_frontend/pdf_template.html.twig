@@ -44,7 +44,8 @@
                     <div class="row pB-140">
                         <div class="col-md-12">
                             <div class="bgc-white bd bdrs-3 p-20">
-                                Aan: {{ period.client.companyName }}, U hebt een nieuwe period te bevestigen.
+                                Aan: {{ period.client.companyName }}
+                                , {% if period.isConfirm == false %} U hebt een nieuwe period te bevestigen. {% endif %}
                                 <h2 class="c-grey-900 mB-20">Period #{{ period.id }} van [12/12/2019 -
                                     30/12/2019]
                                     {% if period.isConfirm %}

@@ -9,7 +9,9 @@ import { Redirect } from 'react-router-dom'
 import { withRouter } from "react-router-dom";
 // import { useDispatch } from 'react-redux'
 // import allActions from '../store/actions'
-import { checkJWTValid } from '../utils/jwt'
+import { checkJWTValid, getRole } from '../utils/jwt'
+import { logout } from '../utils/api'
+
 import 'react-notifications/lib/notifications.css'
 
 let LoginPage = () => {
@@ -19,6 +21,8 @@ let LoginPage = () => {
     const [isAuth, setIsAuth] = useState(checkJWTValid())
     const [error, setError] = useState()
     const [loading, setLoading] = useState(false)
+
+    const [isLogout, setIsLogout] = useState(false)
 
     let handleAuth = async (email, password) => {
 
@@ -34,8 +38,16 @@ let LoginPage = () => {
             .then(response => {
                 if (response.status === 200) {
                     localStorage.setItem("ATP_token", response.data.token)
-                    setIsAuth(true)
-                    setLoading(false)
+
+                    if (getRole(response.data.token) === "ROLE_ADMIN" || getRole(response.data.token) === "ROLE_CLIENT") {
+                        logout()
+                        setLoading(false)
+                        setError("ADMIN & KLANT: GEEN TOEGANG")
+                    } else {
+                        setIsAuth(true)
+                        setLoading(false)
+                    }
+
                 }
                 console.log(response)
             }).catch((error) => {
@@ -59,6 +71,7 @@ let LoginPage = () => {
             easing: 'ease',
         });
     }, [])
+
 
     if (!isAuth) {
         console.log("Auth is :" + checkJWTValid())

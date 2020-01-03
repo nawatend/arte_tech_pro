@@ -2,9 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3536085b-9b7e-4620-868a-e0a508ff002a" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/../app/src/pages/addTask.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/pages/addTask.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/src/utils/helper.js" beforeDir="false" afterPath="$PROJECT_DIR$/../app/src/utils/helper.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/APIController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/APIController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Controller/PeriodController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/PeriodController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../docs/productiedossier.docx" beforeDir="false" afterPath="$PROJECT_DIR$/../docs/productiedossier.docx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/TaskController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/TaskController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/Helper.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Helper.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/client_frontend/pdf_template.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/client_frontend/pdf_template.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/task/create_task.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/task/create_task.html.twig" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -212,7 +218,7 @@
       <workItem from="1577998885655" duration="5557000" />
       <workItem from="1578044364439" duration="1930000" />
       <workItem from="1578047130163" duration="3543000" />
-      <workItem from="1578066484963" duration="3940000" />
+      <workItem from="1578066484963" duration="19418000" />
     </task>
     <servers />
   </component>

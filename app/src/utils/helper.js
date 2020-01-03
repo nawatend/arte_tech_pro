@@ -62,6 +62,9 @@ let getMonthAndYear = (stringDate = "00/0000") => {
     return monthAndYear
 }
 
+
+// if no parameters given => get total by this month by all clients
+// 
 let getMonthIncome = async (month = -1, year = -1, clientId = -1) => {
     let monthTotal = 0
 
@@ -80,14 +83,26 @@ let getMonthIncome = async (month = -1, year = -1, clientId = -1) => {
             .then(response => {
                 if (response.status === 200 && response.data.length > 0) {
 
+
                     if (month === -1 && year === -1 && clientId === -1) {
                         response.data.forEach(task => {
                             let date = new Date(task.date)
                             // let nextTaskDate = new Date(task[i + 1].date)
+                            //both dates created with js
                             if (thisMonth === date.getMonth() && thisYear === date.getFullYear()) {
                                 monthTotal += task.totalCost
                             }
                         })
+                    } else if (month === "ALL") {
+                        response.data.forEach(task => {
+
+                            // let nextTaskDate = new Date(task[i + 1].date)
+                            //both dates created with js
+
+                            monthTotal += task.totalCost
+
+                        })
+
                     } else if (clientId === 0) {
 
                         response.data.forEach(task => {
@@ -153,6 +168,11 @@ let getMonthHours = async (month = -1, year = -1, clientId = -1) => {
                                 monthTotal = timeAddSub(task.TotalHours, monthTotal)
                             }
                         })
+                    } else if (month === "ALL") {
+                        response.data.forEach(task => {
+                            monthTotal = timeAddSub(task.TotalHours, monthTotal)
+                        })
+
                     } else if (clientId === 0) {
 
                         response.data.forEach(task => {
@@ -221,59 +241,29 @@ let getRate = async () => {
 }
 
 
-let getMonthNameFromNumber = (number) => {
 
-    let name = ''
-    switch (number) {
-        case 1:
-            name = "Januari"
-            break;
 
-        case 2:
-            name = "Fabuari"
-            break;
-        case 3:
-            name = "Maart"
-            break;
-        case 4:
-            name = "April"
-            break;
-        case 5:
-            name = "Mei"
-            break;
-        case 6:
-            name = "Juni"
-            break;
-        case 7:
-            name = "Juli"
-            break;
-        case 8:
-            name = "Augustus"
-            break;
-        case 9:
-            name = "September"
-            break;
-        case 10:
-            name = "Oktober"
-            break;
-        case 11:
-            name = "November"
-            break;
-        case 12:
-            name = "December"
-            break;
-
-        default:
-            break;
-    }
-
-    return name
+let addDays = (theDate, days) => {
+    return new Date(theDate.getTime() + days * 24 * 60 * 60 * 1000);
+}
+let subDays = (theDate, days) => {
+    return new Date(theDate.getTime() - days * 24 * 60 * 60 * 1000);
 }
 
+let setMinutes = (theDate, minutes) => {
+    return new Date(theDate.getTime() + minutes * 60 * 1000);
+}
+
+let setHours = (theDate, hours) => {
+    return new Date(theDate.getTime() + hours * 60 * 60 * 1000);
+}
 export {
     getMonthIncome,
     getMonthHours,
     getRate,
-    getMonthNameFromNumber,
-    getMonthAndYear
+    addDays,
+    subDays,
+    getMonthAndYear,
+    setHours,
+    setMinutes
 }

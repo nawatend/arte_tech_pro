@@ -237,6 +237,7 @@ class APIController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $clientRepo = $this->getDoctrine()->getRepository(Client::class);
         $userRepo = $this->getDoctrine()->getRepository(User::class);
+        $rateRepo = $this->getDoctrine()->getRepository(FreelancerRate::class);
         $newTask = new Task();
         $helper = new Helper();
 
@@ -245,7 +246,7 @@ class APIController extends AbstractController
             $postData = json_decode($request->getContent());
 
             $client = $clientRepo->find($postData->clientId);
-            $employeeUser = $userRepo->find($postData->workerId);
+            $workerUser = $userRepo->find($postData->workerId);
 
             //get DateTime from timeStamp
             $startTime = $helper->getTimeFromTimestamp($postData->startTime);
@@ -253,7 +254,7 @@ class APIController extends AbstractController
 
             //fill in new data for new task
             $newTask->setClient($client);
-            $newTask->setUser($employeeUser);
+            $newTask->setUser($workerUser);
             $newTask->setDate(new DateTime($helper->getDateFromTimestamp($postData->date)));
 
             $newTask->setStartTime($startTime);
@@ -266,8 +267,35 @@ class APIController extends AbstractController
             $newTask->setUsed($postData->used);
             $newTask->setTransportKM($postData->km);
 
-            $em->persist($newTask);
-            $em->flush();
+
+            if (in_array("ROLE_FREELANCER", $workerUser->getRoles())) {
+                //check rate of freelancer
+
+                $freelancerRate = $rateRepo->findOneBy(["user" => $workerUser->getId()]);
+                // dd($freelancerRate->getHourRate());
+
+                //10% goes to Arte Tech Company
+                if ($freelancerRate->getHourRate() <= ($client->getHourlyRate() * 0.9)) {
+                    $em->persist($newTask);
+                    $em->flush();
+                } else {
+                    //return $this->redirectToRoute("tasks");
+
+                    $data = [
+                       "error" => "Freelancer heeft hogere uurtarief dan klant",
+                        "status" => 400
+                    ];
+
+                    return new JsonResponse($data,400);
+                }
+
+
+            } else {
+                $em->persist($newTask);
+                $em->flush();
+            }
+
+
         }
         return $this->json("Saved");
     }
