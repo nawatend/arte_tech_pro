@@ -204,7 +204,7 @@ class TaskController extends AbstractController
         $task = $this->getDoctrine()->getRepository(Task::class)->find($taskId);
 
         $helper = new Helper();
-        $errors = '';
+        $errors = null;
         $updateTaskForm = $this->createFormBuilder()
             ->add('taskId', HiddenType::class, [
                 'attr' => ["value" => $task->getId()]

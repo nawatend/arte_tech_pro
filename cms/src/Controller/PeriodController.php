@@ -41,7 +41,7 @@ class PeriodController extends AbstractController
 
 
         return $this->render('period/index.html.twig', [
-            'username'=>$username, "periods" => $periods, 'error' => $error
+            'username' => $username, "periods" => $periods, 'error' => $error
         ]);
     }
 
@@ -87,7 +87,7 @@ class PeriodController extends AbstractController
             ->getForm();
 
         $username = $this->getUser()->getNickname();
-        return $this->render("period/create_period.html.twig", ['username'=>$username,'form' => $newPeriodForm->createView(), 'errors' => $errors]);
+        return $this->render("period/create_period.html.twig", ['username' => $username, 'form' => $newPeriodForm->createView(), 'errors' => $errors]);
     }
 
     /**
@@ -97,7 +97,7 @@ class PeriodController extends AbstractController
      * @return RedirectResponse
      * @throws \Exception
      */
-    public function save(Request $request,\Swift_Mailer $mailer)
+    public function save(Request $request, \Swift_Mailer $mailer)
     {
 
         $helper = new Helper();
@@ -128,15 +128,12 @@ class PeriodController extends AbstractController
 
             //dd(empty($tasks));
             if (!empty($tasks)) {
-               // dd(empty($tasks));
+                // dd(empty($tasks));
                 $newPeriod->setClient($client);
                 $newPeriod->setStartDate($startDate);
                 $newPeriod->setEndDate($endDate);
                 $em->persist($newPeriod);
                 $em->flush();
-
-
-
 
 
                 foreach ($tasks as $task) {
@@ -145,7 +142,6 @@ class PeriodController extends AbstractController
                     $em->persist($task);
                     $em->flush();
                 }
-
 
 
                 //period info for mail
@@ -236,7 +232,7 @@ class PeriodController extends AbstractController
             ->setMethod('POST')
             ->getForm();
         $username = $this->getUser()->getNickname();
-        return $this->render("period/create_period.html.twig", ['username'=>$username,'form' => $updatePeriodForm->createView(), 'period' => $period, 'errors' => $errors]);
+        return $this->render("period/create_period.html.twig", ['username' => $username, 'form' => $updatePeriodForm->createView(), 'period' => $period, 'errors' => $errors]);
     }
 
 
@@ -312,6 +308,34 @@ class PeriodController extends AbstractController
         }
         return $this->render("period/index.html.twig");
     }
+
+    /**
+     * @Route("/period/confirm/{periodId}", name="changeConfirm" , methods={"GET"})
+     * @param  $periodId
+     * @return RedirectResponse
+     */
+    public function changeConfirm($periodId)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $period = $this->getDoctrine()->getRepository(Period::class)->find($periodId);
+
+
+
+        if ($period->getComplain()) {
+            $em->remove($period->getComplain());
+            $em->flush();
+        }
+
+        dd($period->getComplain());
+
+        $period->setIsConfirm(false);
+
+
+        $em->persist($period);
+        $em->flush();
+        return $this->redirectToRoute('periods');
+    }
+
 
     /**
      * @Route("/period/{period}/delete", name="deletePeriod" , methods={"GET"})

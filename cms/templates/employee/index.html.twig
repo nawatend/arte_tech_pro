@@ -14,9 +14,8 @@
                     <tr>
                         <th scope="col">Gebruikers ID</th>
                         <th scope="col">E-mail</th>
-                        <th scope="col">Telefoon</th>
-                        <th scope="col">Uurtarief</th>
-                        <th scope="col">Transportkost</th>
+                        <th scope="col">Gebruikersnaam</th>
+
                     </tr>
                     </thead>
                     <tbody>
@@ -24,6 +23,7 @@
                         <tr onclick="window.location.href='{{ path('editEmployee', {employeeId: employee.id}) }}'" class="clickable">
                             <th scope="row">{{ employee.id }} </th>
                             <td>{{ employee.email }}  </td>
+                            <td>{{ employee.nickname }}  </td>
                         </tr>
                     {% endfor %}
                     </tbody>

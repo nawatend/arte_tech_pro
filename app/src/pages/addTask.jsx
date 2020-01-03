@@ -73,7 +73,7 @@ let AddTaskPage = () => {
     }
 
 
-    
+
     useEffect(() => {
         setToken(localStorage.getItem('ATP_token'))
 
@@ -95,7 +95,9 @@ let AddTaskPage = () => {
         }
         getClients()
 
-    }, [token])
+        console.log(startDate)
+
+    }, [startDate, token])
 
     if (isAuth) {
         if (taskSaved) {
