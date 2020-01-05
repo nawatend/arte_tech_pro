@@ -34,16 +34,16 @@ class TaskController extends AbstractController
     {
 
         $helper = new Helper();
-        $em = $this->getDoctrine()->getRepository(Task::class);
-        $tasks = $em->findAll();
+        $taskRepo = $this->getDoctrine()->getRepository(Task::class);
+        $tasks = $taskRepo->findAll();
         //update all tasks when new properties added
-        $em = $this->getDoctrine()->getManager();
+        $taskRepo = $this->getDoctrine()->getManager();
 
 //        foreach ($tasks as $task){
 //            $task->setPauze(30);
 //
-//            $em->persist($task);
-//            $em->flush();
+//            $taskRepo->persist($task);
+//            $taskRepo->flush();
 //        }
 
         $username = $this->getUser()->getNickname();
@@ -220,7 +220,6 @@ class TaskController extends AbstractController
                 $em->persist($newTask);
                 $em->flush();
             }
-
             return $this->redirectToRoute("tasks");
         }
         return $this->redirectToRoute("tasks");

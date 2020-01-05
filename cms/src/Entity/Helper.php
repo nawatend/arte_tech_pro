@@ -35,15 +35,13 @@ class Helper
         $h = '';
         $m = '';
 
-
         if ($startTime->diff($endTime)->format("%H:%I") > 12) {
 
             $h = (12 + date('h', strtotime($startTime->diff($endTime)->format("%H:%I"))));
             $m = (date('i', strtotime($startTime->diff($endTime)->format("%H:%I"))));
 
-
-
             //reducting pauze from main hours
+            //I'm genius
             if ($m >= $pauze) {
                 $m -= $pauze;
             } else {
@@ -58,6 +56,7 @@ class Helper
             $m = (date('i', strtotime($startTime->diff($endTime)->format("%H:%I"))));
 
             //reducting pauze from main hours
+            //I'm genius
             if ($m >= $pauze) {
                 $m -= $pauze;
             } else {
@@ -68,9 +67,6 @@ class Helper
          //   dd($h . "-12-" . $m . " pauze-> ". $pauze);
 
         }
-
-
-
 
         return $h . ":" . $m;
     }

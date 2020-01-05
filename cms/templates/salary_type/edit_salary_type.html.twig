@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nieuwe Prestatie{% endblock %}
+{% block body %}
+    <div class="bgc-white p-20 bd">
+        <h6 class="c-grey-900">Bonus tarief</h6>
+        <div class="mT-30">
+            {{ form_start(form) }}
+            <div class="form-row col-md-8 ">
+
+                {% if errors is defined and errors is not null %}
+                <div class="form-group col-md-10">
+                    <div class="alert alert-danger" role="alert">{{ errors }}</div>
+                </div>
+                {% endif %}
+
+
+                <div class="form-group col-md-10">
+                    {{ form_label(form.saturday,"Zaterdag Bonus") }}
+                    {{ form_widget(form.saturday,{'attr':{'class': 'form-control'}}) }}
+                </div>
+
+                <div class="form-group col-md-10">
+                    {{ form_label(form.sunday,"Zondag Bonus") }}
+                    {{ form_widget(form.sunday,{'attr':{'class': 'form-control'}}) }}
+                </div>
+                <div class="form-group col-md-10">
+                    {{ form_label(form.weekday,"Weekdagen Overuur Bonus") }}
+                    {{ form_widget(form.weekday,{'attr':{'class': 'form-control'}}) }}
+                </div>
+                <div class="form-group col-md-5">
+                    {{ form_widget(form.save, {'attr':{"class":"btn btn-primary"},'label': 'Opslaan'}) }}
+                </div>
+
+                {{ form_end(form) }}
+
+                {% for error in errors %}
+                    <li>{{ error.message }}</li>
+                {% endfor %}
+                <div class="alert alert-danger remove" id="error_message" role="alert">Voer Getal in!
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
