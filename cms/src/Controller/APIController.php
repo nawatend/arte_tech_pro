@@ -12,24 +12,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\FreelancerRate;
 use App\Entity\User;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Symfony\Component\Serializer\Encoder\JsonEncode;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
-use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
-use Symfony\Component\Serializer\SerializerInterface;
-
 use Doctrine\Common\Annotations\AnnotationReader;
 use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
 use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
@@ -75,6 +63,8 @@ class APIController extends AbstractController
      */
     public function getClients(Request $request)
     {
+
+        //get by groups
         $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
         $metadataAwareNameConverter = new MetadataAwareNameConverter($classMetadataFactory);
         $norm = [new DateTimeNormalizer(), new ObjectNormalizer($classMetadataFactory, $metadataAwareNameConverter),];
@@ -102,6 +92,7 @@ class APIController extends AbstractController
      */
     public function getClientsByUser(Request $request)
     {
+        //get by groups with date sort DESC
         $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
         $metadataAwareNameConverter = new MetadataAwareNameConverter($classMetadataFactory);
         $norm = [new DateTimeNormalizer(), new ObjectNormalizer($classMetadataFactory, $metadataAwareNameConverter),];
@@ -150,8 +141,7 @@ class APIController extends AbstractController
      * @param Request $request
      * @return JsonResponse
      */
-    public
-    function updateRate(Request $request)
+    public function updateRate(Request $request)
     {
 
         $em = $this->getDoctrine()->getManager();
@@ -177,10 +167,9 @@ class APIController extends AbstractController
      * @throws AnnotationException
      * @throws ExceptionInterface
      */
-    public
-    function getRate(Request $request)
+    public function getRate(Request $request)
     {
-
+        //get by groups
         $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
         $norm = [new DateTimeNormalizer(), new ObjectNormalizer($classMetadataFactory),];
         $encoders = [new JsonEncoder()];
@@ -205,8 +194,7 @@ class APIController extends AbstractController
      * @throws AnnotationException
      * @throws ExceptionInterface
      */
-    public
-    function getUserInfo(Request $request)
+    public function getUserInfo(Request $request)
     {
 
         $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
@@ -272,7 +260,7 @@ class APIController extends AbstractController
                 , $client->getTransportCost()
                 , $postData->km, $helper->getWeekType($helper->getDateFromTimestamp($postData->date))
                 , $salaryTypeValue));
-            $newTask->setPauze( $postData->pauzeMinutes);
+            $newTask->setPauze($postData->pauzeMinutes);
             $newTask->setDescription($postData->description);
             $newTask->setUsed($postData->used);
             $newTask->setTransportKM($postData->km);
@@ -295,17 +283,13 @@ class APIController extends AbstractController
                         "error" => "Freelancer heeft hogere uurtarief dan klant",
                         "status" => 400
                     ];
-
                     return new JsonResponse($data, 400);
                 }
-
 
             } else {
                 $em->persist($newTask);
                 $em->flush();
             }
-
-
         }
         return $this->json("Saved");
     }

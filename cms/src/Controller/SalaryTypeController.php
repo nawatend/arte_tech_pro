@@ -26,7 +26,7 @@ class SalaryTypeController extends AbstractController
     {
         $username = $this->getUser()->getNickname();
         $salaryTypeRepo = $this->getDoctrine()->getRepository(SalaryType::class);
-    $bonuses = $salaryTypeRepo->findAll();
+        $bonuses = $salaryTypeRepo->findAll();
 
         return $this->render('salary_type/index.html.twig', [
             'username' => $username, "bonuses" => $bonuses
@@ -66,7 +66,7 @@ class SalaryTypeController extends AbstractController
             ->getForm();
 
         return $this->render('salary_type/edit_salary_type.html.twig', [
-            'username' => $username, 'form' => $updateSalaryTypeForm->createView(), "errors" =>$errors
+            'username' => $username, 'form' => $updateSalaryTypeForm->createView(), "errors" => $errors
         ]);
     }
 

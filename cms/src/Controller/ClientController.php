@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\Client;
 use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -27,7 +26,6 @@ class ClientController extends AbstractController
     public function index()
     {
 
-
         $em = $this->getDoctrine()->getRepository(Client::class);
         $clients = $em->findAll();
         $username = $this->getUser()->getNickname();
@@ -44,11 +42,9 @@ class ClientController extends AbstractController
     public function edit($clientId)
     {
         $clientManager = $this->getDoctrine()->getRepository(Client::class);
-        $userManager = $this->getDoctrine()->getRepository(User::class);
         $client = $clientManager->find($clientId);
         $errors = '';
 
-        // dd($client->getUser()->getPassword());
 
         $updateClientForm = $this->createFormBuilder()
             ->add("clientId", HiddenType::class, ['attr' => ["value" => $client->getId()]])
@@ -100,7 +96,6 @@ class ClientController extends AbstractController
     {
         $user = new User();
         $client = new Client();
-        $errors = '';
 
         if ($request->isMethod("POST")) {
 
@@ -116,9 +111,8 @@ class ClientController extends AbstractController
             $user->setRoles(['ROLE_CLIENT']);
 
             $errors = $validator->validate($user);
-
+            //if there is error, go back to create with error message
             if (count($errors) > 0) {
-
                 $newClientForm = $this->createFormBuilder()
                     ->add("email", EmailType::class)
                     ->add("password", PasswordType::class)

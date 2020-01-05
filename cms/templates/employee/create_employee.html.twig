@@ -4,8 +4,6 @@
 
 {% block body %}
 
-
-
     <div class="bgc-white p-20 bd">
         <h6 class="c-grey-900">Personeel Gegevens</h6>
         <div class="mT-30">
@@ -26,16 +24,6 @@
                 <div class="form-group col-md-6">
                     {{ form_label(form.nickname,'Gebruikersnaam') }} {{ form_widget(form.nickname, {'attr': {'class': 'form-control','id':'inputGebruiks1'}}) }}
                 </div>
-{#                <div class="form-group col-md-6">#}
-{#                    {{ form_label(form.hourlyRate,'Uur tarief') }} {{ form_widget(form.hourlyRate, {'attr': {'class': 'form-control','id':'inputHourlyRate1'}}) }}#}
-{#                </div>#}
-{#                <div class="form-group col-md-6">#}
-{#                    {{ form_label(form.transportCost,'Transportkost') }} {{ form_widget(form.transportCost, {'attr': {'class': 'form-control','id':'inputTransportCost1'}}) }}#}
-{#                </div>#}
-
-{#                <div class="form-group col-md-6">#}
-{#                    {{ form_label(form.telephone, 'telefoon') }} {{ form_widget(form.telephone, {'attr': {'class': 'form-control','id':'inputTelephone1'}}) }}#}
-{#                </div>#}
 
                 <div class="alert alert-danger remove" id="error_message" role="alert">Wachtwoorden moeten zelfde zijn!</div>
             </div>

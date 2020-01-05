@@ -9,7 +9,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -66,8 +65,7 @@ class PageController extends AbstractController
         $totalEmployee = count($employees);
         $totalFreelancer = count($freelancers);
         $totalClient = count($clients);
-        $totalTask = 0;
-        $totalPeriod = 0;
+
 
         if ($currentUser == null) {
             return $this->redirectToRoute("app_login");
@@ -163,6 +161,5 @@ class PageController extends AbstractController
             }
         }
 
-        // return $this->redirectToRoute("app_login");
     }
 }

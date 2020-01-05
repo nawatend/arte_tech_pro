@@ -14,9 +14,7 @@ const store = createStore(rootReducer,
 function App() {
   return (
     <Provider store={store}>
-
       <ATPRouter />
-
     </Provider>
   )
 }

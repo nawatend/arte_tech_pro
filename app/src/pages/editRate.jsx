@@ -1,18 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import BaseLayout from '../layouts/base';
-import { TextField, TextAreaField } from '../components/textFields'
-import SelectOptions from '../components/SelectOptions'
+import { TextField} from '../components/textFields'
 import Button from '../components/Button'
 import { Redirect } from 'react-router-dom'
 import { withRouter } from "react-router-dom";
-import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
 import axios from 'axios'
-import { NotificationContainer, NotificationManager } from 'react-notifications'
 import 'react-notifications/lib/notifications.css'
 import { checkJWTValid } from '../utils/jwt'
 import { logout } from '../utils/api'
-import { FiEdit } from 'react-icons/fi';
 import { getRole } from '../utils/jwt'
 import { getRate } from '../utils/helper'
 

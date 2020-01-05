@@ -5,7 +5,6 @@ let TaskList = ({ tasks }) => {
 
 
     const [totalTasks] = useState(tasks.length)
-    // const [newYear, setNewYear] = useState()
 
     let newYear = null
     useEffect(() => {

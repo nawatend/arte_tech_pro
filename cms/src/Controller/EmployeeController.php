@@ -7,7 +7,6 @@ use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -52,7 +51,6 @@ class EmployeeController extends AbstractController
     public function edit($employeeId)
     {
         $employeeManager = $this->getDoctrine()->getRepository(User::class);
-        $userManager = $this->getDoctrine()->getRepository(User::class);
         $employee = $employeeManager->find($employeeId);
 
 
@@ -63,11 +61,7 @@ class EmployeeController extends AbstractController
             ->add("email", EmailType::class, ['disabled' => true, 'attr' => ["value" => $employee->getEmail()]])
             ->add("password", PasswordType::class, ['disabled' => true, 'attr' => ["value" => $employee->getPassword()]])
             ->add("nickname", TextType::class, ['attr' => ["value" => $employee->getNickname()]])
-//            ->add("telephone", TextType::class,['attr'=> ["value"=>$employee->getTelephone()]])
-//            ->add("transportCost", NumberType::class,['attr'=> ["value"=>$employee->getTransportCost()]])
-//            ->add("hourlyRate", NumberType::class,['attr'=> ["value"=>$employee->getHourlyRate()]])
             ->add('save', SubmitType::class)
-            // ->add('delete', ButtonType::class,['label'=>"Verwijder"])
             ->setAction($this->generateUrl('updateEmployee'))
             ->setMethod('POST')
             ->getForm();
@@ -84,14 +78,12 @@ class EmployeeController extends AbstractController
         $newEmployeeForm = $this->createFormBuilder()
             ->add("email", EmailType::class, ['attr' => ['autocomplete' => 'null']])
             ->add("password", PasswordType::class, ['attr' => ['autocomplete' => "new-password"]])
-            ->add("nickname", TextType::class, ['attr' => ['autocomplete' =>"new-password"]])
-//            ->add("telephone", TextType::class)
-//            ->add("transportCost", NumberType::class)
-//            ->add("hourlyRate", NumberType::class)
+            ->add("nickname", TextType::class, ['attr' => ['autocomplete' => "new-password"]])
             ->add('save', SubmitType::class)
             ->setAction($this->generateUrl('saveEmployee'))
             ->setMethod('POST')
             ->getForm();
+
         $username = $this->getUser()->getNickname();
         return $this->render("employee/create_employee.html.twig", ['username' => $username, 'form' => $newEmployeeForm->createView()]);
     }
@@ -120,7 +112,6 @@ class EmployeeController extends AbstractController
             $em->persist($user);
             $em->flush();
 
-
             return $this->redirectToRoute("employees");
         }
 
@@ -144,7 +135,7 @@ class EmployeeController extends AbstractController
             $em = $this->getDoctrine()->getManager();
 
             //update employee(user)
-              $user->setNickname($employeeData['nickname']);
+            $user->setNickname($employeeData['nickname']);
 
             $em->persist($user);
             $em->flush();

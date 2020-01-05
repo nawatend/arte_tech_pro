@@ -22,8 +22,6 @@ let LoginPage = () => {
     const [error, setError] = useState()
     const [loading, setLoading] = useState(false)
 
-    const [isLogout, setIsLogout] = useState(false)
-
     let handleAuth = async (email, password) => {
 
         setLoading(true)

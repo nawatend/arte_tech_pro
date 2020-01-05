@@ -1,5 +1,6 @@
 import * as jwt from 'jwt-decode';
 
+//check if jwt is not expired
 let checkJWTValid = () => {
 
     let isJWTValid = false
@@ -23,6 +24,7 @@ let checkJWTValid = () => {
     return isJWTValid
 }
 
+//like name says
 let getEmailFromJWT = () => {
 
     const token = localStorage.getItem('ATP_token')

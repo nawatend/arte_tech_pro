@@ -4,10 +4,6 @@ import Select from 'react-select'
 
 let SelectOptions = ({ options, onChange, value, placeholder }) => {
 
-
-
-
-
     return (
         <div className="">
 

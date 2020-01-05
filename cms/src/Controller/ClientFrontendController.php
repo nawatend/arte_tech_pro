@@ -108,7 +108,6 @@ class ClientFrontendController extends AbstractController
     {
 
         $periodRepo = $this->getDoctrine()->getRepository(Period::class);
-        $complainRepo = $this->getDoctrine()->getRepository(Complain::class);
         $em = $this->getDoctrine()->getManager();
 
         if ($request->isMethod("POST")) {
@@ -130,13 +129,10 @@ class ClientFrontendController extends AbstractController
                     $em->persist($newComplain);
                     $em->flush();
                 }
-
-
             } else {
                 $error = "Typ BEVESTIG juist in!";
                 return $this->redirect($this->generateUrl('clientDetailPeriod', array("periodId" => $formData['periodId'], 'error' => $error)), 301);
             }
-
             return $this->redirectToRoute("clientConfirmedPeriods");
         }
     }
@@ -148,20 +144,18 @@ class ClientFrontendController extends AbstractController
      */
     public function exportPeriodPDF($periodId)
     {
-        //****************************************************************************
 
         $periodRepo = $this->getDoctrine()->getRepository(Period::class);
         $taskRepo = $this->getDoctrine()->getRepository(Task::class);
         $period = $periodRepo->find($periodId);
         $tasksOfPeriod = $taskRepo->findBy(['period' => $period], ['date' => 'ASC']);
 
+        //total of period
         $totalCost = 0;
 
         foreach ($tasksOfPeriod as $task) {
             $totalCost += $task->getTotalCost();
         }
-
-
 
         //********************************************************************
 
@@ -190,9 +184,7 @@ class ClientFrontendController extends AbstractController
             "Attachment" => true
         ]);
 
+        //otherwise goes to unknown url/ server down
         dd();
-
-
-
     }
 }

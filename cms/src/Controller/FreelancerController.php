@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\FreelancerRate;
 use App\Entity\User;
-use Doctrine\Common\Annotations\AnnotationException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -12,24 +11,12 @@ use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Symfony\Component\Serializer\Encoder\JsonEncode;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Exception\ExceptionInterface;
-use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
-use Symfony\Component\Serializer\SerializerInterface;
 
-use Doctrine\Common\Annotations\AnnotationReader;
-use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
-use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
-use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 
 
 class FreelancerController extends AbstractController
@@ -40,6 +27,7 @@ class FreelancerController extends AbstractController
     public function index()
     {
         $rateRepo = $this->getDoctrine()->getRepository(FreelancerRate::class);
+        //join two table by user id available in FreelancerRate table
         $queryRates = $rateRepo
             ->createQueryBuilder('p')
             ->innerJoin("p.user", 'c');
@@ -79,7 +67,6 @@ class FreelancerController extends AbstractController
             ->add("transportCost", NumberType::class, ['attr' => ["value" => $freelancer->getTransportCost()]])
             ->add("hourRate", NumberType::class, ['attr' => ["value" => $freelancer->getHourRate()]])
             ->add('save', SubmitType::class)
-            // ->add('delete', ButtonType::class,['label'=>"Verwijder"])
             ->setAction($this->generateUrl('updateFreelancer'))
             ->setMethod('POST')
             ->getForm();
@@ -189,9 +176,7 @@ class FreelancerController extends AbstractController
     public function delete(User $user)
     {
         $em = $this->getDoctrine()->getManager();
-
         $removeRate = $this->getDoctrine()->getRepository(FreelancerRate::class)->findOneBy(['user'=>$user]);
-        //dd($removeRate);
 
         $em->remove($removeRate);
         $em->flush();

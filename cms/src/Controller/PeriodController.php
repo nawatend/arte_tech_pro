@@ -3,13 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\Client;
-use App\Entity\Complain;
 use App\Entity\Helper;
 use App\Entity\Period;
 use App\Entity\Task;
 use App\Entity\User;
 use DateTime;
-use FontLib\Table\Type\name;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -70,8 +68,6 @@ class PeriodController extends AbstractController
                 'widget' => 'single_text',
                 'html5' => false,
                 'format' => 'yy-MM-dd',
-                //'input'  =>  'datetime_immutable',
-                // 'placeholder'=> "Datepicker",
                 'required' => true,
                 'attr' => ['autocomplete' => 'off'],
             ])
@@ -79,8 +75,6 @@ class PeriodController extends AbstractController
                 'widget' => 'single_text',
                 'html5' => false,
                 'format' => 'yy-MM-dd',
-                //'input'  =>  'datetime_immutable',
-                // 'placeholder'=> "Datepicker",
                 'required' => true,
                 'attr' => ['autocomplete' => 'off'],
             ])
@@ -136,9 +130,8 @@ class PeriodController extends AbstractController
                 ->setParameter('client', $client);
             $tasks = $qb->getResult();
 
-            //dd(empty($tasks));
+
             if (!empty($tasks)) {
-                // dd(empty($tasks));
                 $newPeriod->setClient($client);
                 $newPeriod->setStartDate($startDate);
                 $newPeriod->setEndDate($endDate);
@@ -147,7 +140,6 @@ class PeriodController extends AbstractController
 
 
                 foreach ($tasks as $task) {
-                    // $updateTask = $taskRepo->find($task->getId());
                     $task->setPeriod($newPeriod);
                     $em->persist($task);
                     $em->flush();
@@ -196,6 +188,8 @@ class PeriodController extends AbstractController
 
     /**
      * @Route("/edit_period{periodId}", name="editPeriod", methods={"GET"})
+     * @param $periodId
+     * @return Response
      */
 
     public function edit($periodId)
@@ -231,8 +225,6 @@ class PeriodController extends AbstractController
                 'widget' => 'single_text',
                 'html5' => false,
                 'format' => 'M/d/y',
-                //'input'  =>  'datetime_immutable',
-                // 'placeholder'=> "Datepicker",
                 'required' => true,
                 'data' => $period->getEndDate()
             ])
@@ -280,7 +272,6 @@ class PeriodController extends AbstractController
 
             //reset old Tasks of period to null
             foreach ($oldTasks as $task) {
-                // $updateTask = $taskRepo->find($task->getId());
                 $task->setPeriod(null);
                 $em->persist($task);
                 $em->flush();
@@ -308,7 +299,6 @@ class PeriodController extends AbstractController
 
             //set period to tasks for new scope of dates
             foreach ($tasks as $task) {
-                // $updateTask = $taskRepo->find($task->getId());
                 $task->setPeriod($oldPeriod);
                 $em->persist($task);
                 $em->flush();

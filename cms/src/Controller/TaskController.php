@@ -20,7 +20,6 @@ use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Validator\Constraints\Date;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 
@@ -36,18 +35,20 @@ class TaskController extends AbstractController
         $helper = new Helper();
         $taskRepo = $this->getDoctrine()->getRepository(Task::class);
         $tasks = $taskRepo->findAll();
+
+
         //update all tasks when new properties added
         $taskRepo = $this->getDoctrine()->getManager();
-
-//        foreach ($tasks as $task){
-//            $task->setPauze(30);
-//
-//            $taskRepo->persist($task);
-//            $taskRepo->flush();
-//        }
+        //test: when adding new properties
+        //        foreach ($tasks as $task){
+        //            $task->setPauze(30);
+        //
+        //            $taskRepo->persist($task);
+        //            $taskRepo->flush();
+        //        }
+        //-----------------------------------------
 
         $username = $this->getUser()->getNickname();
-        //dd($username);
         return $this->render('task/index.html.twig', [
             'controller_name' => 'TaskController', "tasks" => $tasks, 'username' => $username
         ]);
@@ -98,8 +99,6 @@ class TaskController extends AbstractController
                 'widget' => 'single_text',
                 'html5' => false,
                 'format' => 'yy-MM-dd',
-                //'input'  =>  'datetime_immutable',
-                // 'placeholder'=> "Datepicker",
                 'required' => true,
                 'attr' => ['autocomplete' => 'off'],
             ])
@@ -141,6 +140,8 @@ class TaskController extends AbstractController
 
     /**
      * @Route("/task/save", name="saveTask", methods={"GET","POST"})
+     * @param Request $request
+     * @return RedirectResponse
      * @throws \Exception
      */
 
@@ -399,7 +400,6 @@ class TaskController extends AbstractController
                 $em->flush();
             }
 
-
             return $this->redirectToRoute("tasks");
         }
         return $this->redirectToRoute("tasks");
@@ -426,8 +426,7 @@ class TaskController extends AbstractController
      */
     public function getTasksByUser(Request $request)
     {
-        $helper = new Helper();
-        $clientManager = $this->getDoctrine()->getRepository(Client::class);
+
         $userManager = $this->getDoctrine()->getRepository(User::class);
         $taskManager = $this->getDoctrine()->getRepository(Task::class);
 

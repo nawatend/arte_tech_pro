@@ -19,7 +19,9 @@ let getThisYear = () => {
     return n
 }
 //from online
-let timeAddSub = (timeOne, timeTwo, flag = true) => { // flag=true to add values and flag=false to subtract values
+// flag=true to add values and flag=false to subtract values
+let timeAddSub = (timeOne, timeTwo, flag = true) => {
+
     let tt1 = timeOne
     if (tt1 === '') {
         return ''
@@ -143,6 +145,7 @@ let getMonthIncome = async (month = -1, year = -1, clientId = -1) => {
 
 }
 
+//default is -1
 let getMonthHours = async (month = -1, year = -1, clientId = -1) => {
     let monthTotal = "00:00"
     const token = localStorage.getItem('ATP_token')
@@ -239,8 +242,6 @@ let getRate = async () => {
 
     return rate
 }
-
-
 
 
 let addDays = (theDate, days) => {

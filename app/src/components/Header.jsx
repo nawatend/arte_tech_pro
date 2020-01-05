@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { FiLogOut, FiHome } from 'react-icons/fi';
+import { FiLogOut } from 'react-icons/fi';
 import { Redirect } from 'react-router-dom'
 import { withRouter } from "react-router-dom";
 import { useDispatch } from 'react-redux'
