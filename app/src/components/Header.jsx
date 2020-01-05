@@ -8,12 +8,12 @@ import { logout } from '../utils/api'
 import axios from 'axios'
 import allActions from '../store/actions'
 
-import { getEmailFromJWT } from '../utils/jwt'
+import { getEmailFromJWT, checkJWTValid } from '../utils/jwt'
 
 let Header = () => {
 
 
-    const [isLogout, setIsLogout] = useState(false)
+    const [isLogout, setIsLogout] = useState(!checkJWTValid())
     const [token] = useState(localStorage.getItem('ATP_token'))
     const [user, setUser] = useState("____________")
 
@@ -50,9 +50,9 @@ let Header = () => {
 
         if (!isLogout) {
             setStates()
-
         }
 
+        //test redux -- end up not using it
         dispatch(allActions.userActions.setUser({ name: user }))
     })
 

@@ -40,11 +40,12 @@ class TaskController extends AbstractController
         $em = $this->getDoctrine()->getManager();
 
 //        foreach ($tasks as $task){
-//            $task->setTotalCost($helper->calculateTaskTotalCost($task->getClient()->getHourlyRate(),$task->getTotalHours(),$task->getClient()->getTransportCost(),$task->getTransportKM()));
+//            $task->setPauze(30);
 //
 //            $em->persist($task);
 //            $em->flush();
 //        }
+
         $username = $this->getUser()->getNickname();
         //dd($username);
         return $this->render('task/index.html.twig', [
@@ -100,6 +101,7 @@ class TaskController extends AbstractController
                 //'input'  =>  'datetime_immutable',
                 // 'placeholder'=> "Datepicker",
                 'required' => true,
+                'attr' => ['autocomplete' => 'off'],
             ])
             ->add('startTime', TimeType::class, [
                 'input' => 'array',
@@ -116,6 +118,10 @@ class TaskController extends AbstractController
                 'placeholder' => [
                     'hour' => 'Uur', 'minute' => 'Minuut',
                 ],
+                'required' => true,
+            ])
+            ->add('pauze', NumberType::class, [
+                //'html5'=> true,
                 'required' => true,
             ])
             ->add('description', TextareaType::class, ['required' => true])
@@ -142,12 +148,13 @@ class TaskController extends AbstractController
     {
 
 
-        $helper = new Helper();
         $clientRepo = $this->getDoctrine()->getRepository(Client::class);
         $userRepo = $this->getDoctrine()->getRepository(User::class);
         $rateRepo = $this->getDoctrine()->getRepository(FreelancerRate::class);
         $salaryTypeRepo = $this->getDoctrine()->getRepository(SalaryType::class);
+
         $newTask = new Task();
+        $helper = new Helper();
 
         if ($request->isMethod('POST')) {
             $em = $this->getDoctrine()->getManager();
@@ -173,13 +180,13 @@ class TaskController extends AbstractController
             $newTask->setStartTime(new DateTime($taskData['startTime']));
             $newTask->setEndTime(new DateTime($taskData['endTime']));
             $newTask->setTotalHours($helper->getHoursDifference(new DateTime($taskData['startTime'])
-                , new DateTime($taskData['endTime'])));
+                , new DateTime($taskData['endTime']), $taskData['pauze']));
 
             $newTask->setTotalCost($helper->calculateTaskTotalCost($client->getHourlyRate()
                 , $helper->getHoursDifference(new DateTime($taskData['startTime'])
-                    , new DateTime($taskData['endTime'])), $client->getTransportCost()
+                    , new DateTime($taskData['endTime']), $taskData['pauze']), $client->getTransportCost()
                 , $taskData['km'], $helper->getWeekType($dateFormatted), $salaryTypeValue));
-
+            $newTask->setPauze($taskData['pauze']);
             $newTask->setDescription($taskData['description']);
             $newTask->setUsed($taskData['used']);
             $newTask->setTransportKM($taskData['km']);
@@ -199,24 +206,20 @@ class TaskController extends AbstractController
                     //set  with freelancers rate
                     $newTask->setTotalCost($helper->calculateTaskTotalCost($freelancerRate->getHourRate()
                         , $helper->getHoursDifference(new DateTime($taskData['startTime'])
-                            , new DateTime($taskData['endTime'])), $freelancerRate->getTransportCost()
+                            , new DateTime($taskData['endTime']), $taskData['pauze']), $freelancerRate->getTransportCost()
                         , $taskData['km'], $helper->getWeekType($dateFormatted), $salaryTypeValue));
-
 
                     $em->persist($newTask);
                     $em->flush();
                 } else {
                     //return $this->redirectToRoute("tasks");
-                    $error = "Freelancer heeft hogere uurtarief dan klant";
+                    $error = "Freelancer (" . $freelancerRate->getHourRate() . " EUR/uur) heeft hogere uurtarief dan klant(" . ($client->getHourlyRate() * 0.9) . " EUR/uur)";
                     return $this->redirect($this->generateUrl('createTask', array('error' => $error)), 301);
                 }
-
-
             } else {
                 $em->persist($newTask);
                 $em->flush();
             }
-
 
             return $this->redirectToRoute("tasks");
         }
@@ -296,6 +299,11 @@ class TaskController extends AbstractController
                 'data' => ['hour' => $task->getEndTime()->format('H'),
                     'minute' => $task->getEndTime()->format('i')]
             ])
+            ->add('pauze', NumberType::class, [
+                //'html5'=> true,
+                'required' => true,
+                'attr' => ['value' => $task->getPauze()]
+            ])
             ->add('description', TextareaType::class, ['required' => true,
                 'data' => $task->getDescription()
             ])
@@ -351,11 +359,13 @@ class TaskController extends AbstractController
             $oldTask->setDate(new DateTime($dateFormatted));
             $oldTask->setStartTime(new DateTime($taskData['startTime']));
             $oldTask->setEndTime(new DateTime($taskData['endTime']));
-            $oldTask->setTotalHours($helper->getHoursDifference(new DateTime($taskData['startTime']), new DateTime($taskData['endTime'])));
+            $oldTask->setTotalHours($helper->getHoursDifference(new DateTime($taskData['startTime']),
+                new DateTime($taskData['endTime']), $taskData['pauze']));
             $oldTask->setTotalCost($helper->calculateTaskTotalCost($client->getHourlyRate()
                 , $helper->getHoursDifference(new DateTime($taskData['startTime'])
-                    , new DateTime($taskData['endTime'])), $client->getTransportCost(), $taskData['km'], $helper->getWeekType($dateFormatted)
+                    , new DateTime($taskData['endTime']), $taskData['pauze']), $client->getTransportCost(), $taskData['km'], $helper->getWeekType($dateFormatted)
                 , $salaryTypeValue));
+            $oldTask->setPauze($taskData['pauze']);
             $oldTask->setDescription($taskData['description']);
             $oldTask->setUsed($taskData['used']);
             $oldTask->setTransportKM($taskData['km']);
@@ -372,10 +382,10 @@ class TaskController extends AbstractController
 
                     $oldTask->setTotalCost($helper->calculateTaskTotalCost($freelancerRate->getHourRate()
                         , $helper->getHoursDifference(new DateTime($taskData['startTime'])
-                            , new DateTime($taskData['endTime'])), $freelancerRate->getTransportCost()
+                            , new DateTime($taskData['endTime']), $taskData['pauze']), $freelancerRate->getTransportCost()
                         , $taskData['km'], $helper->getWeekType($dateFormatted), $salaryTypeValue));
 
-                   // dd($oldTask);
+                    // dd($oldTask);
 
                     $em->persist($oldTask);
                     $em->flush();

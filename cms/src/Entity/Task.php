@@ -97,6 +97,12 @@ class Task
      */
     private $totalCost;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     * @Groups({"taskInfo"})
+     */
+    private $pauze;
+
     public function __construct()
     {
 
@@ -237,6 +243,18 @@ class Task
     public function setTotalCost(?float $totalCost): self
     {
         $this->totalCost = $totalCost;
+
+        return $this;
+    }
+
+    public function getPauze(): ?int
+    {
+        return $this->pauze;
+    }
+
+    public function setPauze(?int $pauze): self
+    {
+        $this->pauze = $pauze;
 
         return $this;
     }

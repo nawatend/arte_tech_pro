@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\SalaryType;
 use DateTime;
 use App\Entity\Client;
 use App\Entity\Helper;
@@ -238,6 +239,8 @@ class APIController extends AbstractController
         $clientRepo = $this->getDoctrine()->getRepository(Client::class);
         $userRepo = $this->getDoctrine()->getRepository(User::class);
         $rateRepo = $this->getDoctrine()->getRepository(FreelancerRate::class);
+        $salaryTypeRepo = $this->getDoctrine()->getRepository(SalaryType::class);
+
         $newTask = new Task();
         $helper = new Helper();
 
@@ -252,6 +255,9 @@ class APIController extends AbstractController
             $startTime = $helper->getTimeFromTimestamp($postData->startTime);
             $endTime = $helper->getTimeFromTimestamp($postData->endTime);
 
+            $salaryTypeValue = $salaryTypeRepo->findOneBy(['typeName' => $helper->getWeekType($helper->getDateFromTimestamp($postData->date))])->getBonusRate();
+
+
             //fill in new data for new task
             $newTask->setClient($client);
             $newTask->setUser($workerUser);
@@ -259,10 +265,14 @@ class APIController extends AbstractController
 
             $newTask->setStartTime($startTime);
             $newTask->setEndTime($endTime);
-            $newTask->setTotalHours($helper->getHoursDifference($startTime, $endTime));
+            $newTask->setTotalHours($helper->getHoursDifference($startTime, $endTime, $postData->pauzeMinutes));
 
             $newTask->setTotalCost($helper->calculateTaskTotalCost($client->getHourlyRate()
-                , $helper->getHoursDifference($startTime, $endTime), $client->getTransportCost(), $postData->km));
+                , $helper->getHoursDifference($startTime, $endTime)
+                , $client->getTransportCost()
+                , $postData->km, $helper->getWeekType($helper->getDateFromTimestamp($postData->date))
+                , $salaryTypeValue));
+            $newTask->setPauze( $postData->pauzeMinutes);
             $newTask->setDescription($postData->description);
             $newTask->setUsed($postData->used);
             $newTask->setTransportKM($postData->km);
@@ -282,11 +292,11 @@ class APIController extends AbstractController
                     //return $this->redirectToRoute("tasks");
 
                     $data = [
-                       "error" => "Freelancer heeft hogere uurtarief dan klant",
+                        "error" => "Freelancer heeft hogere uurtarief dan klant",
                         "status" => 400
                     ];
 
-                    return new JsonResponse($data,400);
+                    return new JsonResponse($data, 400);
                 }
 
 

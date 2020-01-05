@@ -50,6 +50,10 @@
                     {{ form_widget(form.endTime,{'attr':{'class': 'form-control'}}) }}
                 </div>
                 <div class="form-group col-md-10">
+                    {{ form_label(form.pauze,"Pauze in minuten (0,15,30,60)") }}
+                    {{ form_widget(form.pauze,{'attr':{'class': 'form-control'}}) }}
+                </div>
+                <div class="form-group col-md-10">
                     {{ form_label(form.description,'Beschrijving') }}
                     {{ form_widget(form.description,{'attr':{'class': 'form-control', 'rows': '6'}}) }}
                 </div>

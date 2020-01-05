@@ -73,6 +73,7 @@ class PeriodController extends AbstractController
                 //'input'  =>  'datetime_immutable',
                 // 'placeholder'=> "Datepicker",
                 'required' => true,
+                'attr' => ['autocomplete' => 'off'],
             ])
             ->add("endDate", DateType::class, [
                 'widget' => 'single_text',
@@ -81,6 +82,7 @@ class PeriodController extends AbstractController
                 //'input'  =>  'datetime_immutable',
                 // 'placeholder'=> "Datepicker",
                 'required' => true,
+                'attr' => ['autocomplete' => 'off'],
             ])
             ->add('save', SubmitType::class)
             ->setAction($this->generateUrl('savePeriod'))

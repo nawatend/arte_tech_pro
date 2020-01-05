@@ -27,18 +27,52 @@ class Helper
         return date('Y-m-d', strtotime($date));
     }
 
-    public function getHoursDifference($startTime, $endTime)
+    public function getHoursDifference($startTime, $endTime, $pauze = 0)
     {
         $totalTimeDiff = "00:00";
-        if ($startTime->diff($endTime)->format("%H:%I") > 12) {
-            $totalTimeDiff = (12 + date('h', strtotime($startTime->diff($endTime)->format("%H:%I"))))
-                . ":" . (date('i', strtotime($startTime->diff($endTime)->format("%H:%I"))) / 60);
+        $pauzeInTime = "00:00";
 
-            // dd($totalTimeDiff);
-            return $totalTimeDiff;
+        $h = '';
+        $m = '';
+
+
+        if ($startTime->diff($endTime)->format("%H:%I") > 12) {
+
+            $h = (12 + date('h', strtotime($startTime->diff($endTime)->format("%H:%I"))));
+            $m = (date('i', strtotime($startTime->diff($endTime)->format("%H:%I"))));
+
+
+
+            //reducting pauze from main hours
+            if ($m >= $pauze) {
+                $m -= $pauze;
+            } else {
+                $h -= 1;
+                $m = ($m + 60) - $pauze;
+            }
+
+           // dd($h . "-*-" . $m . " pauze-> ". $pauze);
         } else {
-            return $startTime->diff($endTime)->format("%H:%I");
+
+            $h = (date('h', strtotime($startTime->diff($endTime)->format("%H:%I"))));
+            $m = (date('i', strtotime($startTime->diff($endTime)->format("%H:%I"))));
+
+            //reducting pauze from main hours
+            if ($m >= $pauze) {
+                $m -= $pauze;
+            } else {
+                $h -= 1;
+                $m = ($m + 60) - $pauze;
+            }
+
+         //   dd($h . "-12-" . $m . " pauze-> ". $pauze);
+
         }
+
+
+
+
+        return $h . ":" . $m;
     }
 
     public function calculateTaskTotalCost($hourlyRate, $totalHours, $transportRate, $transportKM, $salaryType, $salaryTypeValue)
@@ -65,7 +99,7 @@ class Helper
 
         }
 
-        if($salaryType == "SATURDAY" || $salaryType == "SUNDAY"){
+        if ($salaryType == "SATURDAY" || $salaryType == "SUNDAY") {
             //on weekend
             $mainCost = $mainHours * $hourlyRate * $salaryTypeValue;
             $extraCost = $extraHours * $hourlyRate * $salaryTypeValue;
@@ -98,15 +132,12 @@ class Helper
         $weekType = "WEEKDAY";
         $weekDay = date('w', strtotime($date));
 
-        if($weekDay == 0){
+        if ($weekDay == 0) {
             $weekType = "SUNDAY";
         }
-        if($weekDay == 6 )
-        {
+        if ($weekDay == 6) {
             $weekType = "SATURDAY";
         }
-
-
 
 
         return $weekType;

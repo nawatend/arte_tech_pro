@@ -77,7 +77,7 @@ class ClientController extends AbstractController
         $errors = '';
         $newClientForm = $this->createFormBuilder()
             ->add("email", EmailType::class)
-            ->add("password", PasswordType::class)
+            ->add("password", PasswordType::class,['attr' => ['autocomplete' => 'new-password']])
             ->add("companyName", TextType::class)
             ->add("telephone", TextType::class)
             ->add("transportCost", NumberType::class)
